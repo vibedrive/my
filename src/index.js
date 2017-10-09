@@ -10,6 +10,7 @@ const LOGIN_URL = 'http://localhost:5823/login'
 const LOGOUT_URL = 'http://localhost:5823/logout'
 
 app.use((state, emitter) => {
+  state.initializing = true
   state.loggingIn = false
   state.tokens = {
     refreshToken: null,
@@ -95,7 +96,9 @@ app.use((state, emitter) => {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
 
     if (!refreshToken) {
-      // not logged in
+      state.initializing = false
+      emitter.emit('render')
+      return
     }
 
     const opts = {
@@ -108,7 +111,9 @@ app.use((state, emitter) => {
       if (res.statusCode === 200 && body.accessToken) {
         saveSession(refreshToken, body.accessToken)
       } else {
-        // not logged in
+        state.initializing = false
+        emitter.emit('render')
+        return
       }
     })
   }
@@ -119,8 +124,10 @@ app.route('/', layout(home))
 app.mount('body')
 
 function layout (view) {
-  return (state, emit) => state.user
-    ? html`
+  return (state, emit) => 
+    state.initializing ? '<body></body>' :
+    state.user
+      ? html`
         <body>
           <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
