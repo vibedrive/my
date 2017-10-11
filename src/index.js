@@ -193,9 +193,9 @@ function home (state, emit) {
         <div class="content  has-text-centered">
           <p>Download Vibedrive to get started</p>
           <p>
-            <button class="button is-dark is-large">
+            <a href="" class="button is-dark is-large">
               Download Vibedrive
-            </button>
+            </a>
           </p>
         </div>
       </div>
