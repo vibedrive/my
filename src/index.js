@@ -1,6 +1,7 @@
 const xhr = require('xhr')
 const choo = require('choo')
 const html = require('choo/html')
+const home = require('./home')
 const app = choo()
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
 const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
@@ -120,84 +121,69 @@ app.use((state, emitter) => {
 })
 
 
-app.route('/', layout(home))
+app.route('/', home)
 app.mount('body')
 
-function layout (view) {
-  return (state, emit) => 
-    state.initializing ? '<body></body>' :
-    state.user
-      ? html`
-        <body>
-          <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
+// function layout (view) {
+//   return (state, emit) => 
+//     state.initializing ? '<body></body>' :
+//     state.user
+//       ? html`
+//         <body>
+//           <nav class="navbar" role="navigation" aria-label="main navigation">
+//             <div class="navbar-brand">
 
-            </div>
-            <div class="navbar-menu">
-              <div class="navbar-end">
-                <div class="navbar-item">
-                  <p>${state.user.email}</p>
-                </div>
-              </div>
-            </div>
-          </nav>
+//             </div>
+//             <div class="navbar-menu">
+//               <div class="navbar-end">
+//                 <div class="navbar-item">
+//                   <p>${state.user.email}</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </nav>
 
-          ${view(state, emit)}
+//           ${view(state, emit)}
 
-          <footer class="footer has-text-centered">
-            <a class="has-text-dark" onclick=${e => emit('logout')}>Logout</a>
-          </footer>
-        </body>`
-    : html`
-        <body>
-          <section class="hero is-fullheight">
-            <div class="hero-body">
-              <div class="container has-text-centered">
-                <div class="column is-4 is-offset-4">
-                <form>
-                  <div class="field">
-                    <label class="label">Email</label>
-                    <div class="control has-icons-left"> 
-                      <input name="email" class="input" type="text" />
-                      <span class="icon is-small is-left">
-                        <i class="fa fa-envelope"></i>
-                      </span>
-                    </div>
-                  </div>
-                  <div class="field">
-                    <label class="label">Password</label>
-                    <div class="control has-icons-left"> 
-                      <input name="password" class="input" type="password" />
-                      <span class="icon is-small is-left">
-                        <i class="fa fa-key"></i>
-                      </span>
-                    </div>
-                  </div>
-                  <button 
-                    onclick=${e => emit('login', e)} 
-                    class="button is-dark is-medium ${state.loggingIn ? 'is-loading' : ''}">
-                    Login
-                  </button>
-                </form>
-                </div>
-              </div>
-            </div>
-          </section>
-        </body>`
-}
+//           <footer class="footer has-text-centered">
+//             <a class="has-text-dark" onclick=${e => emit('logout')}>Logout</a>
+//           </footer>
+//         </body>`
+//     : html`
+//         <body>
+//           <section class="hero is-fullheight">
+//             <div class="hero-body">
+//               <div class="container has-text-centered">
+//                 <div class="column is-4 is-offset-4">
+//                 <form>
+//                   <div class="field">
+//                     <label class="label">Email</label>
+//                     <div class="control has-icons-left"> 
+//                       <input name="email" class="input" type="text" />
+//                       <span class="icon is-small is-left">
+//                         <i class="fa fa-envelope"></i>
+//                       </span>
+//                     </div>
+//                   </div>
+//                   <div class="field">
+//                     <label class="label">Password</label>
+//                     <div class="control has-icons-left"> 
+//                       <input name="password" class="input" type="password" />
+//                       <span class="icon is-small is-left">
+//                         <i class="fa fa-key"></i>
+//                       </span>
+//                     </div>
+//                   </div>
+//                   <button 
+//                     onclick=${e => emit('login', e)} 
+//                     class="button is-dark is-medium ${state.loggingIn ? 'is-loading' : ''}">
+//                     Login
+//                   </button>
+//                 </form>
+//                 </div>
+//               </div>
+//             </div>
+//           </section>
+//         </body>`
+// }
 
-function home (state, emit) {
-  return html`
-    <section class="section">
-      <div class="container">
-        <div class="content  has-text-centered">
-          <p>Download Vibedrive to get started</p>
-          <p>
-            <a href="" class="button is-dark is-large">
-              Download Vibedrive
-            </a>
-          </p>
-        </div>
-      </div>
-    </section>`
-}

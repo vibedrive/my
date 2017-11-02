@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "budo src/index.js:bundle.js --live --dir src",
-    "build": "mkdir -p dist && cp src/index.html dist/ && ./node_modules/.bin/browserify src/index.js -t [ babelify --presets [ latest ] ] | uglifyjs > dist/bundle.js "
+    "build": "mkdir -p dist && cp src/index.html dist/ && ./node_modules/.bin/browserify src/index.js -t [ babelify --presets [ env ] ] | uglifyjs > dist/bundle.js "
   },
   "author": "kareniel",
   "license": "MIT",
   "devDependencies": {
-    "babel-preset-latest": "^6.24.1",
+    "babel-preset-env": "^1.6.0",
     "babelify": "^7.3.0",
     "budo": "^10.0.4",
     "uglify-js": "^3.1.3"
