@@ -31,24 +31,24 @@ const rows = [{
 
 module.exports = function home (state, emit) {
   return html`
-    <body>
+    <div class="">
       <nav id="navbar">
         <h1>Vibedrive</h1>
         <a>
-          <img src="#"/>
+          <img src="#" title="${state.user.email}" />
         </a>
       </nav>
 
       <nav id="tabsbar">
         <div>
           ${tabs.map(tab => html`
-            <div>
+            <a href="#">
               <span>${tab.name}</span>
-            </div>
+            </a>
           `)}
         </div>
         <div id="history-dropdown">
-          <img src="#">
+          <img src="#" />
         </div>
       </nav>
 
@@ -86,7 +86,11 @@ module.exports = function home (state, emit) {
         </table>
       </div>
 
-    </body>
+      <footer class="">
+        <a href="/" onclick=${e => emit('logout')}>Logout</a>
+      </footer>
+
+    </div>
   `
 }
 
