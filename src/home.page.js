@@ -1,10 +1,12 @@
 const html = require('choo/html')
 
 const tabs = [
-  { name: 'Files' },
   { name: 'Tracks' },
   { name: 'Artists' },
-  { name: 'Labels' }
+  { name: 'Labels' },
+  { name: 'Audio Stream' },
+  { name: 'Tag' },
+  { name: 'Cover Art' }
 ]
 
 const cols = [
@@ -15,7 +17,14 @@ const cols = [
   { name: 'BPM', key: 'bpm', type: 'int' },
   { name: 'Key', key: 'key', type: 'str' },
   { name: 'Energy', key: 'energy', type: 'star' },
-  { name: 'Tags', key: 'tags', type: 'tags' }
+  { name: 'Tags', key: 'tags', type: 'tags' },
+  { name: 'Album', key: 'album', type: 'str' },
+  { name: 'Track', key: 'track', type: 'int' },
+  { name: 'Year', key: 'year', type: 'int' },
+  { name: 'Genre', key: 'genre', type: 'str' },
+  { name: 'Comment', key: 'comment', type: 'str' },
+  { name: 'Length', key: 'length', type: 'int' },
+  { name: 'Audio', key: 'audio', type: 'str' } // audio stream -> size, codec, bitrate, frequency
 ]
 
 const rows = [{ 
@@ -26,7 +35,14 @@ const rows = [{
   bpm: { value: 140 }, 
   key: { value: 'C#m' }, 
   energy: { value: 3 }, 
-  tags: { items: [{ name: 'Chill' }] } 
+  tags: { items: [{ name: 'Chill' }] },
+  album: { value: '' },
+  track: { value: null },
+  year: { value: 2017 },
+  genre: { value: 'Hip Hop' },
+  comment: { value: '...' },
+  length: { value: 223 },
+  audio: { value: '0x2f2d0f3313a2' }
 }]
 
 module.exports = function home (state, emit) {
@@ -118,7 +134,7 @@ function strEl (state) {
 
 function intEl (state) {
   return html`
-    <td>${state.value}</td>`
+    <td>${parseInt(state.value)}</td>`
 }
 
 function starEl (state) {

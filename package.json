@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "choo": "^6.5.1",
+    "multihashes": "^0.4.12",
     "xhr": "^2.4.0"
   }
 }
