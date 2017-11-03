@@ -17,7 +17,11 @@
   },
   "dependencies": {
     "choo": "^6.5.1",
+    "concat-stream": "^1.6.0",
+    "filereader-stream": "^1.0.0",
     "multihashes": "^0.4.12",
+    "musicmetadata": "^2.0.5",
+    "pouchdb": "^6.3.4",
     "xhr": "^2.4.0"
   }
 }

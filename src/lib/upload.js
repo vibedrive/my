@@ -1,6 +1,5 @@
 var http = require('./http')
-const sha1 = require('./sha1') 
-const multihash = require('./multihash')
+const sha1 = require('./sha1')
 const getHeaders = () => ({ 'Authorization': localStorage.getItem(TOKEN_KEY) })
 const API_URL = 'https://localhost:5823'
 const TOKEN_KEY = 'vibedrive::access_token'
@@ -27,17 +26,21 @@ async function uploadSmallFile (file, onUploadProgress) {
   try {
     var { uploadUrl, authorizationToken } = await getUploadUrl()
     var opts = {
-      filename: file.name,
-      data: await loadFile(file),
+      filename: file.fileName,
+      data: file.data,
       size: file.size,
       uploadUrl,
       authorizationToken
     }
 
-    var { fileId } = await uploadFile(opts, onUploadProgress)
-    var hash = multihash(opts.data)
+    console.log(opts)
 
-    await finishSmallFile(fileId, hash, file.name, file.size) 
+    var { fileId } = await uploadFile(opts, onUploadProgress)
+
+    await finishSmallFile(fileId, file.hash, file.fileName, file.size)
+
+    return Object.assign(file, { fileId })
+
   } catch (err) {
     console.error(err)
   }
@@ -46,15 +49,6 @@ async function uploadSmallFile (file, onUploadProgress) {
 function getUploadUrl () {
   var url = API_URL + '/upload/fileURL'
   return http.get({ url, headers: getHeaders(), json: true })
-}
-
-async function loadFile (file) {
-  return new Promise((resolve, reject) => {
-    var reader = new FileReader()
-
-    reader.onload = function (onSmallFileLoad) { resolve(this.result) }
-    reader.readAsText(file)
-  })
 }
 
 function uploadFile (opts, onUploadProgress) {
@@ -93,11 +87,8 @@ function finishSmallFile (fileId, multihash, filename, size) {
 // --- LARGE FILE ---
 
 async function uploadLargeFile (file, onUploadProgress) { 
-  var fileData = await loadFile(file)
-  var hash = multihash(fileData)
-  var response = await startLargeFile(file.name, hash)
-  var fileId = response.fileId
-  var parts = splitFile(fileData)
+  var { fileId } = await startLargeFile(file.name, file.hash)
+  var parts = splitFile(file.data)
   var partSha1Array = []
 
   let i = 1
@@ -127,6 +118,8 @@ async function uploadLargeFile (file, onUploadProgress) {
   }
 
   await finishLargeFile(fileId, hash, file.name, partSha1Array)
+
+  return Object.assign(file, { fileId })
 }
 
 function splitFile (fileData) {

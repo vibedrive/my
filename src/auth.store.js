@@ -1,4 +1,8 @@
 const xhr = require('xhr')
+const database = require('./lib/db')
+const store = {
+  tracks: require('./lib/tracks')
+}
 
 const LOCAL_URL = 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
@@ -16,6 +20,8 @@ module.exports = function (state, emitter) {
     accessToken: null
   }
 
+  state.tracks = []
+
   state.user = null
 
   emitter.on('DOMContentLoaded', () => {
@@ -30,21 +36,23 @@ module.exports = function (state, emitter) {
     state.loggingIn = true
     emitter.emit('render')
 
-    const { email, password } = e.target.form.elements
-    const opts = {
+    var email = e.target.form.elements.email.value
+    var password = e.target.form.elements.password.value
+
+    var opts = {
       url: LOGIN_URL,
-      body: { email: email.value, password: password.value },
+      body: { email, password },
       json: true
     }
 
-    xhr.post(opts, (err, res, body) => {
+    xhr.post(opts, async function (err, res, body) {
       state.loggingIn = false
       emitter.emit('render')
 
       if (err) return console.error(err)
 
       if (res.statusCode === 200 && body) {
-        saveSession(body.refreshToken, body.accessToken)
+        await saveSession(body.refreshToken, body.accessToken)
       }
     })
   }
@@ -61,12 +69,18 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    xhr.get(opts, (err, res, body) => {
+    xhr.get(opts, async (err, res, body) => {
       if (res.statusCode === 200 && body) {
         state.user = body
+
+        await database.init(state.user.email)
+
+        var tracks = await store.tracks.get()
+        state.tracks = tracks
+
         emitter.emit('render')
       }
-     })
+    })
   }
 
   function logout () {
@@ -104,9 +118,9 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    xhr.post(opts, (err, res, body) => {
+    xhr.post(opts, async (err, res, body) => {
       if (res.statusCode === 200 && body.accessToken) {
-        saveSession(refreshToken, body.accessToken)
+        await saveSession(refreshToken, body.accessToken)
         state.initializing = false
         emitter.emit('render')
         return

@@ -10,21 +10,21 @@ const tabs = [
 ]
 
 const cols = [
-  { name: 'Cover', key: 'cover', type: 'img' },
-  { name: 'Title', key: 'title', type: 'str' },
-  { name: 'Artist', key: 'artist', type: 'str' },
-  { name: 'Label', key: 'label', type: 'str' },
-  { name: 'BPM', key: 'bpm', type: 'int' },
-  { name: 'Key', key: 'key', type: 'str' },
-  { name: 'Energy', key: 'energy', type: 'star' },
-  { name: 'Tags', key: 'tags', type: 'tags' },
-  { name: 'Album', key: 'album', type: 'str' },
-  { name: 'Track', key: 'track', type: 'int' },
-  { name: 'Year', key: 'year', type: 'int' },
-  { name: 'Genre', key: 'genre', type: 'str' },
-  { name: 'Comment', key: 'comment', type: 'str' },
-  { name: 'Length', key: 'length', type: 'int' },
-  { name: 'Audio', key: 'audio', type: 'str' } // audio stream -> size, codec, bitrate, frequency
+  { name: 'Cover', key: 'cover.id', type: 'img' },
+  { name: 'Title', key: 'metadata.title', type: 'str' },
+  { name: 'Artist', key: 'metadata.artist', type: 'str' },
+  { name: 'Label', key: 'metadata.label', type: 'str' },
+  { name: 'BPM', key: 'metadata.bpm', type: 'int' },
+  { name: 'Key', key: 'metadata.key', type: 'str' },
+  { name: 'Energy', key: 'metadata.energy', type: 'star' },
+  { name: 'Tags', key: 'metadata.tags', type: 'tags' },
+  { name: 'Album', key: 'metadata.album', type: 'str' },
+  { name: 'Track', key: 'metadata.track', type: 'int' },
+  { name: 'Year', key: 'metadata.year', type: 'int' },
+  { name: 'Genre', key: 'metadata.genre', type: 'str' },
+  { name: 'Comment', key: 'metadata.comment', type: 'str' },
+  { name: 'Length', key: 'audio.length', type: 'int' },
+  { name: 'Audio', key: 'audio.hash', type: 'str' } // audio stream -> size, codec, bitrate, frequency
 ]
 
 const rows = [{ 
@@ -46,6 +46,9 @@ const rows = [{
 }]
 
 module.exports = function home (state, emit) {
+  var rows = state.tracks
+  console.log(rows)
+
   return html`
     <div class="">
       <input type="file" multiple onchange=${e => emit('upload', e.target.files)}/>
@@ -58,11 +61,7 @@ module.exports = function home (state, emit) {
 
       <nav id="tabsbar">
         <div>
-          ${tabs.map(tab => html`
-            <a href="#">
-              <span>${tab.name}</span>
-            </a>
-          `)}
+          ${tabs.map(tab => html`<a href="#"><span>${tab.name}</span></a>`)}
         </div>
         <div id="history-dropdown">
           <img src="#" />
@@ -96,7 +95,7 @@ module.exports = function home (state, emit) {
             ${rows.map((row, i) => html`
               <tr>
                 <td>${i + 1}</td>
-                ${cols.map(col => getCellEl(col.type, row[col.key]))}
+                ${cols.map(col => getCellEl(col.type, fromRecursiveKey(row, col.key)))}
               </tr>
             `)}
           </tbody>
@@ -111,38 +110,56 @@ module.exports = function home (state, emit) {
   `
 }
 
-function getCellEl (columnType, state) {
+function fromRecursiveKey (row, key) {
+  var keys = key.split('.')
+  var key = keys[0]
+
+  if (keys.length > 1) {
+    var object = row[key]
+
+    if (!object) return null
+    var nextKey = keys.slice(1).join('.')
+    return fromRecursiveKey(object, nextKey)
+  } else {
+    var value = row[key]
+
+    return value
+  }
+}
+
+function getCellEl (columnType, value) {
+  
   return {
     img: imgEl,
     str: strEl,
     int: intEl,
     star: starEl,
     tags: tagsEl
-  }[columnType](state)
+  }[columnType](value)
 }
 
 
-function imgEl (state) {
+function imgEl (url = '#') {
   return html`
-    <td><img src="${state.url}"/></td>`
+    <td><img src="${url}"/></td>`
 }
 
-function strEl (state) {
+function strEl (value = '') {
   return html`
-    <td>${state.value}</td>`
+    <td>${value}</td>`
 }
 
-function intEl (state) {
+function intEl (value = 0) {
   return html`
-    <td>${parseInt(state.value)}</td>`
+    <td>${value}</td>`
 }
 
-function starEl (state) {
+function starEl (value = 0) {
   return html`
-    <td>${Array(state.value).fill(html`<span>⋆</span>`)}</td>`
+    <td>${Array(value).fill(html`<span>⋆</span>`)}</td>`
 }
 
-function tagsEl (state) {
+function tagsEl (tags = []) {
   return html`
-    <td>${state.items.map(item => html`<span>${item.name}</span>`)}</td>`
+    <td>${tags.map(tag => html`<span>${tag.name}</span>`)}</td>`
 }
