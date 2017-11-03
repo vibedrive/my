@@ -32,6 +32,7 @@ const rows = [{
 module.exports = function home (state, emit) {
   return html`
     <div class="">
+      <input type="file" multiple onchange=${e => emit('upload', e.target.files)}/>
       <nav id="navbar">
         <h1>Vibedrive</h1>
         <a>

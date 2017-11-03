@@ -3,6 +3,7 @@ const choo = require('choo')
 const html = require('choo/html')
 const home = require('./home')
 const app = choo()
+const { uploadSmallFile, uploadLargeFile } = require('./upload')
 const LOCAL_URL = 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
 const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
@@ -24,9 +25,33 @@ app.use((state, emitter) => {
   emitter.on('DOMContentLoaded', () => {
     getSession()
 
+    emitter.on('upload', upload)
     emitter.on('login', login)
     emitter.on('logout', logout)
   })
+
+  async function upload (files) {
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const { type, size } = file
+      
+      // TODO: add check on type (only let mp3 pass?)
+
+      if (size < 5000) {
+        await uploadSmallFile(file, onUploadProgress)
+      } else {
+        await uploadLargeFile(file, onUploadProgress)
+      }
+
+      // done
+    }
+
+    // all done
+  }
+
+  function onUploadProgress (e) {
+
+  }
 
   function login (e) {
     e.preventDefault()
