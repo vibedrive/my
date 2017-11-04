@@ -87,7 +87,7 @@ function finishSmallFile (fileId, multihash, filename, size) {
 // --- LARGE FILE ---
 
 async function uploadLargeFile (file, onUploadProgress) { 
-  var { fileId } = await startLargeFile(file.name, file.hash)
+  var { fileId } = await startLargeFile(file.fileName, file.hash)
   var parts = splitFile(file.data)
   var partSha1Array = []
 
@@ -117,7 +117,7 @@ async function uploadLargeFile (file, onUploadProgress) {
     }
   }
 
-  await finishLargeFile(fileId, hash, file.name, partSha1Array)
+  await finishLargeFile(fileId, file.hash, file.name, partSha1Array)
 
   return Object.assign(file, { fileId })
 }

@@ -22,35 +22,39 @@ module.exports = function tracksPage (state, emit) {
   var rows = state.tracks
 
   return html`
-    <div>
+    <div class="flex flex-column flex-auto">
       ${toolbar(state, emit)}
-      <div id="table-container" class="flex flex-column">
+      <div id="table-container" class="flex flex-auto flex-column bg-light-gray" style="overflow-x: scroll">
 
-        <div class="flex bg-light-gray black-80 b--silver h2" style="border-top: 2px solid #aaa; border-bottom: 1px solid #aaa">
-          <div class="ph3 pv1"><input type="checkbox" /></div>
+        <div class="flex us-none b--silver h2 w-100 ">
+          <div class="th pl3 pr4 pv1 " style="width: 2rem;"><input type="checkbox" /></div>
           ${cols.map(col => html`
-              <div class="flex" style="position: relative;">
-                <div class="ph3 pv1">
-                  <span class="has-caret">${col.name}</span>
+              <div class="th flex bg-light-gray relative">
+                <div class="f6 fw5 pa-05 flex items-center black-70 cursor-default" style="width: 150px;">
+                  <span class="has-caret" style="">${col.name}</span>
                 </div>
                 <div class="sep"><div></div></div>
               </div>
           `)}
         </div>
 
-      ${rows.map((row, i) => html`
-        <div class="flex bg-white black">
-          <div class="ph3 pv1">${i + 1}</div>
-        ${cols.map(col => html`
-          <div class="flex">
-            <div class="ph1 pv1">
-              ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
+        <div class="bg-light-gray flex flex-auto flex-column ">      
+          ${rows.map((row, i) => html`
+            <div class="flex">
+              <div class="td tc f7 pl3 pr4 pv1 bb bw1 b--moon-gray bg-white black-70 tc" style="width: 2rem;" >
+                ${i + 1}
+              </div>
+              ${cols.map(col => html`
+                <div class="flex">
+                  <div class="td pa-05 f7 fw5 bb br bw1 b--moon-gray bg-white black-70 cursor-default" style="width: 150px">
+                    ${fromRecursiveKey(row, col.key)}
+                  </div>
+                  <div></div>
+                </div>
+              `)}
             </div>
-            <div></div>
-          </div>
-        `)}
+          `)}
         </div>
-      `)}
       </div>
     </div>
   `

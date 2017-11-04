@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "budo src/index.js:bundle.js --ssl --pushstate --live --dir src",
+    "start": "budo src/index.js:bundle.js --ssl --pushstate --live --dir src  --dir assets ",
     "build": "mkdir -p dist && cp src/index.html dist/ && ./node_modules/.bin/browserify src/index.js -t [ babelify --presets [ env ] ] | uglifyjs > dist/bundle.js "
   },
   "author": "kareniel",

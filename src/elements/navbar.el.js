@@ -2,25 +2,17 @@ const html = require('choo/html')
 
 module.exports = function navbar (state, emit) {
   return html`
-    <nav id="navbar" class="flex w-100 h3 justify-between content-between">
-      <div class="flex1 flex items-center pl3">
+    <nav id="navbar" class="flex w-100 justify-between content-between" style="height: 3rem">
+      <div class="flex1 flex justify-start items-center pl3 pv2">
+      </div>
 
-        <input id="file-input" 
-          class="hidden" 
-          type="file" 
-          multiple 
-          onchange=${e => emit('upload', e.target.files)}/>
-        <label for="file-input" class="pointer ph3 pv2 near-black br1 bg-white h2">
-          Import Files
-        </label>
-        
+      <div class="flex1 flex justify-center items-center pv2">
+        <p class="ttu f6 fw6"><a class="white-90" href="/">Vibedrive</a></p>
       </div>
-      <div class="flex1 flex justify-center items-center">
-        <p class="">Vibedrive</p>
-      </div>
-      <div class="flex1 flex justify-end items-center pr3">
+
+      <div class="flex1 flex justify-end items-center pr3 pv2 f6">
         <a onclick=${e => emit('ui:toggle-account-dropdown')}>
-          <img src="#" title="${state.user.email}" />
+          <img class="button-icon" src="/icons/ic_account_circle_white_48px.svg" title="${state.user.email}" />
         </a>
       </div>
       

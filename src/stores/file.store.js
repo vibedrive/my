@@ -28,6 +28,9 @@ module.exports = function (state, emitter) {
         : await uploadLargeFile(file, getOnUploadProgress(i))
     
       var track = await tracks.create(uploaded)
+      state.tracks = await tracks.get()
+
+      emitter.emit('render')
     }
   }
 

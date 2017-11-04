@@ -4,12 +4,10 @@ const tabs = [
   { name: 'Tracks', route: '/tracks' },
   { name: 'Artists', route: '/artists' },
   { name: 'Labels', route: '/labels' },
-  { name: 'Audio Streams', route: '/audios' },
-  { name: 'Tags', route: '/tags' },
-  { name: 'Cover Art', route: '/covers' }
+  { name: 'Tags', route: '/tags' }
 ]
 
-var active = 'bg-white black'
+var active = 'bg-white black-80 cursor-default'
 
 module.exports = function tabsbar (state, emit) {
   var isActive = tab => tab.route === state.route ? active : ''
@@ -19,7 +17,7 @@ module.exports = function tabsbar (state, emit) {
       <div class="flex justify-between">
         ${tabs.map((tab, i) => html`
           <a class="flex1 w4 tc mh1" href=${tab.route}>
-            <div class="w-100 b--white bw1 bt bl br br1 pv2 ${isActive(tab)}">
+            <div class="f6 fw5 w-100 b--white bw1 bt bl br br1 pv2 ${isActive(tab)}">
               ${tab.name}
             </div>
           </a>

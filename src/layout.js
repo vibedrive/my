@@ -18,7 +18,7 @@ function initializing () {
 
 function layout (view, state, emit) {
   return html`
-    <body class="">  
+    <body class="flex flex-column">  
       ${navbar(state, emit)}
       ${view(state, emit)}
     </body>`
