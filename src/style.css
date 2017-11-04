@@ -1,0 +1,107 @@
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  color: #999;
+  text-decoration: none;
+}
+
+a.is-primary {
+  color: #18bfff;
+}
+
+a:hover {
+  color: white;
+  transition: 0.5s;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  margin: 0;
+  padding-bottom: 6rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  background-color: #000;
+  color: #fff;
+}
+
+.has-caret:after; {
+  content: '▼';
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
+
+/* #18bfff */
+
+::selection {
+  background-color: black;
+  color: #fff;
+}
+::-moz-selection {
+  background-color: black;
+  color: #fff;
+}
+          
+.flex1 {
+  flex: 1;
+}
+
+.bw1 {
+  border-width: 1px;
+}
+
+.sep {
+  height: 100%; 
+  width: 20px;
+  position: absolute;
+  right: -10px;
+  height: 1.8rem;
+  text-align: center;
+  z-index: 2;
+}
+
+.sep > div {
+  width: 1px;
+  height: 100%;
+  background-color: #AAA;
+  margin: 0 auto;
+}
+
+.sep:hover  {
+  cursor: ew-resize;
+  user-select: none;
+}
+
+.sep:hover > div {
+  background-color: blue;
+  transform: scale3d(2, 1, 1);
+}
+
+.bg-none {
+  background: none;
+}
+
+.btn-hover:hover {
+  background-color: #eee;
+}
+
+.hidden {
+  display: none;
+}

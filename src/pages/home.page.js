@@ -23,34 +23,37 @@ module.exports = function home (state, emit) {
   var rows = state.tracks
 
   return html`
-    <div class="">
+    <div>
       ${tabsbar(state, emit)}
       ${toolbar(state, emit)}
-      <div id="table-container">
-        <table>
-          <thead>
-              <tr>
-                <th><input type="checkbox" /></th>
-                ${cols.map(col => html`
-                    <th>
-                      <span>${col.name}</span>
-                      <button>▼</button>
-                    </th>
-                `)}
-              </tr>
-          </thead>
-          <tbody>
-            ${rows.map((row, i) => html`
-              <tr>
-                <td>${i + 1}</td>
-                ${cols.map(col => getCellEl(col.type, fromRecursiveKey(row, col.key)))}
-              </tr>
-            `)}
-          </tbody>
-        </table>
-      </div>
+      <div id="table-container" class="flex flex-column">
 
-      <input type="file" multiple onchange=${e => emit('upload', e.target.files)}/>
+        <div class="flex bg-moon-gray black b--silver h2" style="border-top: 2px solid #aaa; border-bottom: 1px solid #aaa">
+          <div class="ph3 pv1"><input type="checkbox" /></div>
+          ${cols.map(col => html`
+              <div class="flex" style="position: relative;">
+                <div class="ph3 pv1">
+                  <span class="has-caret">${col.name}</span>
+                </div>
+                <div class="sep"><div></div></div>
+              </div>
+          `)}
+        </div>
+
+      ${rows.map((row, i) => html`
+        <div class="flex bg-white black">
+          <div class="ph3 pv1">${i + 1}</div>
+        ${cols.map(col => html`
+          <div class="flex">
+            <div>
+              ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
+            </div>
+            <div></div>
+          </div>
+        `)}
+        </div>
+      `)}
+      </div>
     </div>
   `
 }
@@ -76,7 +79,7 @@ function getCellEl (columnType, value) {
   return {
     img: imgEl,
     str: strEl,
-    int: intEl,
+    int: strEl,
     star: starEl,
     tags: tagsEl
   }[columnType](value)
@@ -85,25 +88,20 @@ function getCellEl (columnType, value) {
 
 function imgEl (url = '#') {
   return html`
-    <td><img src="${url}"/></td>`
+    <div><img src="${url}"/></div>`
 }
 
 function strEl (value = '') {
   return html`
-    <td>${value}</td>`
-}
-
-function intEl (value = 0) {
-  return html`
-    <td>${value}</td>`
+    <div>${value}</div>`
 }
 
 function starEl (value = 0) {
   return html`
-    <td>${Array(value).fill(html`<span>⋆</span>`)}</td>`
+    <div>${Array(value).fill(html`<span>⋆</span>`)}</div>`
 }
 
 function tagsEl (tags = []) {
   return html`
-    <td>${tags.map(tag => html`<span>${tag.name}</span>`)}</td>`
+    <div>${tags.map(tag => html`<span>${tag.name}</span>`)}</div>`
 }
