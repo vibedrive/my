@@ -105,3 +105,7 @@ button {
 .hidden {
   display: none;
 }
+
+.lh-none {
+  line-height: 0;
+}

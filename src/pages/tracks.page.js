@@ -1,5 +1,4 @@
 const html = require('choo/html')
-const tabsbar = require('../elements/tabsbar.el')
 const toolbar = require('../elements/toolbar.el')
 const cols = [
   { name: 'Cover', key: 'cover.id', type: 'img' },
@@ -19,16 +18,15 @@ const cols = [
   { name: 'Audio', key: 'audio.hash', type: 'str' }
 ]
 
-module.exports = function home (state, emit) {
+module.exports = function tracksPage (state, emit) {
   var rows = state.tracks
 
   return html`
     <div>
-      ${tabsbar(state, emit)}
       ${toolbar(state, emit)}
       <div id="table-container" class="flex flex-column">
 
-        <div class="flex bg-moon-gray black b--silver h2" style="border-top: 2px solid #aaa; border-bottom: 1px solid #aaa">
+        <div class="flex bg-light-gray black-80 b--silver h2" style="border-top: 2px solid #aaa; border-bottom: 1px solid #aaa">
           <div class="ph3 pv1"><input type="checkbox" /></div>
           ${cols.map(col => html`
               <div class="flex" style="position: relative;">
@@ -45,7 +43,7 @@ module.exports = function home (state, emit) {
           <div class="ph3 pv1">${i + 1}</div>
         ${cols.map(col => html`
           <div class="flex">
-            <div>
+            <div class="ph1 pv1">
               ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
             </div>
             <div></div>
