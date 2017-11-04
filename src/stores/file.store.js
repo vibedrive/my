@@ -1,10 +1,9 @@
-const tracks = require('./lib/tracks')
-const { uploadSmallFile, uploadLargeFile } = require('./lib/upload')
-
 var concat = require('concat-stream')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
-var multihash = require('./lib/multihash')
+var tracks = require('../lib/tracks')
+var { uploadSmallFile, uploadLargeFile } = require('../lib/upload')
+var multihash = require('../lib/multihash')
 
 const LOCAL_URL = 'https://localhost:5823'
 const FIVE_MB = 5 * 1000 * 1000

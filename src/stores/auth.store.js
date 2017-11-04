@@ -1,7 +1,7 @@
 const xhr = require('xhr')
-const database = require('./lib/db')
+const database = require('../lib/db')
 const store = {
-  tracks: require('./lib/tracks')
+  tracks: require('../lib/tracks')
 }
 
 const LOCAL_URL = 'https://localhost:5823'

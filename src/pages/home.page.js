@@ -1,14 +1,6 @@
 const html = require('choo/html')
-
-const tabs = [
-  { name: 'Tracks' },
-  { name: 'Artists' },
-  { name: 'Labels' },
-  { name: 'Audio Stream' },
-  { name: 'Tag' },
-  { name: 'Cover Art' }
-]
-
+const tabsbar = require('../elements/tabsbar.el')
+const toolbar = require('../elements/toolbar.el')
 const cols = [
   { name: 'Cover', key: 'cover.id', type: 'img' },
   { name: 'Title', key: 'metadata.title', type: 'str' },
@@ -24,60 +16,16 @@ const cols = [
   { name: 'Genre', key: 'metadata.genre', type: 'str' },
   { name: 'Comment', key: 'metadata.comment', type: 'str' },
   { name: 'Length', key: 'audio.length', type: 'int' },
-  { name: 'Audio', key: 'audio.hash', type: 'str' } // audio stream -> size, codec, bitrate, frequency
+  { name: 'Audio', key: 'audio.hash', type: 'str' }
 ]
-
-const rows = [{ 
-  cover: { url: '#' }, 
-  title: { value: 'My Doo' }, 
-  artist: { value: 'Doodle-doo' }, 
-  label: { value: 'Doodelirium' }, 
-  bpm: { value: 140 }, 
-  key: { value: 'C#m' }, 
-  energy: { value: 3 }, 
-  tags: { items: [{ name: 'Chill' }] },
-  album: { value: '' },
-  track: { value: null },
-  year: { value: 2017 },
-  genre: { value: 'Hip Hop' },
-  comment: { value: '...' },
-  length: { value: 223 },
-  audio: { value: '0x2f2d0f3313a2' }
-}]
 
 module.exports = function home (state, emit) {
   var rows = state.tracks
-  console.log(rows)
 
   return html`
     <div class="">
-      <input type="file" multiple onchange=${e => emit('upload', e.target.files)}/>
-      <nav id="navbar">
-        <h1>Vibedrive</h1>
-        <a>
-          <img src="#" title="${state.user.email}" />
-        </a>
-      </nav>
-
-      <nav id="tabsbar">
-        <div>
-          ${tabs.map(tab => html`<a href="#"><span>${tab.name}</span></a>`)}
-        </div>
-        <div id="history-dropdown">
-          <img src="#" />
-        </div>
-      </nav>
-
-      <nav id="toolbar">
-        <div id="view-dropdown"></div>
-        <div id="tools">
-          <div id="filter-dropdown"></div>
-          <div id="group-by-dropdown"></div>
-          <div id="sort-dropdown"></div>
-        </div>
-        <div id="export-dropdown"></div>
-      </nav>
-
+      ${tabsbar(state, emit)}
+      ${toolbar(state, emit)}
       <div id="table-container">
         <table>
           <thead>
@@ -102,10 +50,7 @@ module.exports = function home (state, emit) {
         </table>
       </div>
 
-      <footer class="">
-        <a href="/" onclick=${e => emit('logout')}>Logout</a>
-      </footer>
-
+      <input type="file" multiple onchange=${e => emit('upload', e.target.files)}/>
     </div>
   `
 }
@@ -128,7 +73,6 @@ function fromRecursiveKey (row, key) {
 }
 
 function getCellEl (columnType, value) {
-  
   return {
     img: imgEl,
     str: strEl,
