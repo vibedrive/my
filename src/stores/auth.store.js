@@ -17,6 +17,10 @@ const LOGOUT_URL = LOCAL_URL + '/logout'
 module.exports = function (state, emitter) {
   state.initializing = true
   state.loggingIn = false
+  state.auth = {
+    email: '',
+    password: ''
+  }
   state.tokens = {
     refreshToken: null,
     accessToken: null
@@ -30,7 +34,17 @@ module.exports = function (state, emitter) {
     getSession()
     emitter.on('login', login)
     emitter.on('auth:logout', logout)
+    emitter.on('auth:input-email', inputEmail)
+    emitter.on('auth:input-password', inputPassword)
   })
+
+  function inputEmail (value) {
+    state.auth.email = value
+  }
+
+  function inputPassword (value) {
+    state.auth.password = value 
+  }
 
   async function login (e) {
     e.preventDefault()
@@ -47,21 +61,27 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    var promise = http.post(opts)
-
-    await sleep(1000)
+    await sleep(300)
 
     try {
-      var body = await promise
+      var body = await http.post(opts)
       var { refreshToken, accessToken } = body
 
       saveSession(refreshToken, accessToken)
+
       await initialize()
 
       state.loggingIn = false
-      emitter.emit('render')
+
+      document.body.classList.remove('anim-fadein')
+      document.body.classList.add('anim-fadeout')
+      await sleep(500)
+
+      emitter.emit(state.events.REPLACESTATE, '/tracks')
+
     } catch (err) {
       console.error(err)
+      state.auth.password = ''
       Notifications.error('Sorry, we don’t recognize that email or password.')
       state.loggingIn = false
       emitter.emit('render')  
@@ -85,7 +105,6 @@ module.exports = function (state, emitter) {
     state.user = await http.get(opts)
     await database.init(state.user.email)
     state.tracks = await store.tracks.get()
-    emitter.emit(state.events.REPLACESTATE, '/tracks')
   }
 
   async function logout () {
@@ -96,7 +115,14 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    await http.post(opts)
+    var promise =  http.post(opts)
+
+    document.body.classList.remove('anim-fadein')
+    document.body.classList.add('anim-fadeout')
+    await sleep(500)
+
+    await promise
+
     clearSession()
 
     emitter.emit('render')

@@ -3,10 +3,9 @@ var Notifications = require('../components/notifications')
 
 module.exports = function (state, emit) {
   return html`
-    <body class="flex">
+    <body class="flex anim-fadein">
       ${Notifications.render()}
       <section class="flex flex-auto justify-center items-center flex-column ">
-
 
         <div class="flex-auto flex items-center">
           <div class="" style="min-width: 480px">
@@ -23,7 +22,13 @@ module.exports = function (state, emit) {
                   <label class="f5 fw6 moon-gray">Email</label>
                   <div class=""> 
 
-                    <input type="text" name="email"  class="w-100 mt3 mb4 br1 ph3 pv3 f4" placeholder="Email"/>
+                    <input 
+                      type="text" 
+                      name="email" 
+                      class="w-100 mt3 mb4 br1 ph3 pv3 f4" 
+                      placeholder="Email" 
+                      value=${state.auth.email}
+                      oninput=${e => emit('auth:input-email', e.target.value)}/>
                     <span class="">
                       <i class=""></i>
                     </span>
@@ -35,7 +40,13 @@ module.exports = function (state, emit) {
                   <label class="f5 fw6 moon-gray">Password</label>
                   <div class=""> 
 
-                    <input class="w-100 mt3 mb4 br1 ph3 pv3 f4" type="password" name="password" placeholder="Password" />
+                    <input 
+                      type="password" 
+                      name="password" 
+                      placeholder="Password" 
+                      class="w-100 mt3 mb4 br1 ph3 pv3 f4"
+                      value=${state.auth.password}
+                      oninput=${e => emit('auth:input-password', e.target.value)}/> 
                     <span class="">
                       <i class=""></i>
                     </span>

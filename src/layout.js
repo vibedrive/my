@@ -25,7 +25,7 @@ function initializing () {
 
 function layout (view, state, emit) {
   return html`
-    <body class="flex flex-column">
+    <body class="flex flex-column anim-fadein">
       ${uploadModal(state, emit)}
       ${navbar(state, emit)}
       ${view(state, emit)}
