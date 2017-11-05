@@ -1,4 +1,6 @@
-const xhr = require('xhr')
+const http = require('../lib/http')
+const sleep = require('../lib/sleep')
+const Notifications = require('../components/notifications')
 const database = require('../lib/db')
 const store = {
   tracks: require('../lib/tracks')
@@ -27,10 +29,10 @@ module.exports = function (state, emitter) {
   emitter.on('DOMContentLoaded', () => {
     getSession()
     emitter.on('login', login)
-    emitter.on('logout', logout)
+    emitter.on('auth:logout', logout)
   })
 
-  function login (e) {
+  async function login (e) {
     e.preventDefault()
     
     state.loggingIn = true
@@ -45,16 +47,25 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    xhr.post(opts, async function (err, res, body) {
+    var promise = http.post(opts)
+
+    await sleep(1000)
+
+    try {
+      var body = await promise
+      var { refreshToken, accessToken } = body
+
+      saveSession(refreshToken, accessToken)
+      await initialize()
+
       state.loggingIn = false
       emitter.emit('render')
-
-      if (err) return console.error(err)
-
-      if (res.statusCode === 200 && body) {
-        await saveSession(body.refreshToken, body.accessToken)
-      }
-    })
+    } catch (err) {
+      console.error(err)
+      Notifications.error('Sorry, we don’t recognize that email or password.')
+      state.loggingIn = false
+      emitter.emit('render')  
+    }
   }
 
   function saveSession (refreshToken, accessToken) {
@@ -62,28 +73,22 @@ module.exports = function (state, emitter) {
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
     state.tokens.refreshToken = refreshToken
     state.tokens.accessToken = accessToken
+  }
 
+  async function initialize () {
     const opts = {
       url: CURRENT_USER_URL,
-      headers: { authorization: accessToken },
+      headers: { authorization: state.tokens.accessToken },
       json: true
     }
 
-    xhr.get(opts, async (err, res, body) => {
-      if (res.statusCode === 200 && body) {
-        state.user = body
-
-        await database.init(state.user.email)
-
-        var tracks = await store.tracks.get()
-        state.tracks = tracks
-
-        emitter.emit('render')
-      }
-    })
+    state.user = await http.get(opts)
+    await database.init(state.user.email)
+    state.tracks = await store.tracks.get()
+    emitter.emit(state.events.REPLACESTATE, '/tracks')
   }
 
-  function logout () {
+  async function logout () {
     const opts = {
       url: LOGOUT_URL,
       headers: { authorization: state.tokens.accessToken },
@@ -91,19 +96,20 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    xhr.post(opts, (err, res, body) => {
-      if (err) return console.error(err)
+    await http.post(opts)
+    clearSession()
 
-      localStorage.setItem(ACCESS_TOKEN_KEY, null)
-      localStorage.setItem(REFRESH_TOKEN_KEY, null)
-      state.user = null
-      state.tokens = {}
-
-      emitter.emit('render')
-    })
+    emitter.emit('render')
   }
 
-  function getSession () {
+  function clearSession () {
+    localStorage.setItem(ACCESS_TOKEN_KEY, null)
+    localStorage.setItem(REFRESH_TOKEN_KEY, null)
+    state.user = null
+    state.tokens = {}
+  }
+
+  async function getSession () {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
 
     if (!refreshToken) {
@@ -118,18 +124,16 @@ module.exports = function (state, emitter) {
       json: true
     }
 
-    xhr.post(opts, async (err, res, body) => {
-      if (res.statusCode === 200 && body.accessToken) {
-        await saveSession(refreshToken, body.accessToken)
-        state.initializing = false
-        emitter.emit('render')
-        return
-      } else {
-        state.initializing = false
-        emitter.emit('render')
-        return
-      }
-    })
+    try {
+      var { accessToken } = await http.post(opts)
+      saveSession(refreshToken, accessToken)
+      await initialize()
+      state.initializing = false
+      emitter.emit('render')
+    } catch (err) {
+      state.initializing = false
+      emitter.emit('render')
+    }
   }
 }
 

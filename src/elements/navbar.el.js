@@ -1,4 +1,5 @@
 const html = require('choo/html')
+const accountDropdown = require('./account-dropdown.el')
 
 module.exports = function navbar (state, emit) {
   return html`
@@ -7,23 +8,16 @@ module.exports = function navbar (state, emit) {
       </div>
 
       <div class="flex1 flex justify-center items-center pv2">
-        <p class="ttu f6 fw6"><a class="white-90" href="/">Vibedrive</a></p>
+        <p class=""><a class="white-90" href="/">Vibedrive</a></p>
       </div>
 
       <div class="flex1 flex justify-end items-center pr3 pv2 f6">
-        <a onclick=${e => emit('ui:toggle-account-dropdown')}>
+        <a class="pointer" onclick=${e => emit('ui:toggle-account-dropdown')}>
           <img class="button-icon" src="/icons/ic_account_circle_white_48px.svg" title="${state.user.email}" />
         </a>
       </div>
+
+      ${accountDropdown(state, emit)}
       
     </nav>`
 }
-
-function acccountDropdown () {
-  return html`
-    <div class="">
-      <a href="/" onclick=${e => emit('logout')}>Logout</a>
-    </div>
-  `
-}
-      

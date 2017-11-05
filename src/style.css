@@ -31,10 +31,22 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  animation: fadein 0.5s 1 ease forwards;
+  opacity: 0;
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0;
+  } 
+  to {
+    opacity: 1;
+  }
+}
+
+
 html, body {
-  background-color: #000;
+  background-color: #111;
   color: #fff;
 }
 
@@ -45,6 +57,45 @@ html, body {
 button {
   border: none;
   cursor: pointer;
+}
+
+button.is-loading {
+  color: transparent !important;
+  pointer-events: none;
+  position: relative;
+}
+
+button.is-loading:after {
+  position: absolute;
+  left: calc(50% - (1em / 2));
+  top: calc(50% - (1em / 2));
+  position: absolute !important;
+
+  /* spinner */
+  animation: spinAround 500ms infinite linear;
+  border: 2px solid white;
+  border-radius: 290486px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  content: "";
+  display: block;
+  height: 1em;
+  position: relative;
+  width: 1em;
+}
+
+button.is-loading.bg-white:after {
+  border: 3px solid #333;
+  border-right-color: transparent;
+  border-top-color: transparent;
+}
+
+input[type=text], input[type=password] {
+  border: none;
+}
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color: #DDD;
 }
 
 /* purple  #6540CC */
@@ -68,7 +119,7 @@ button {
 }
 
 .br1 {
-  border-radius: 2px;
+  border-radius: 1px;
 }
 
 
@@ -216,3 +267,68 @@ button {
     clip: rect(0px, 36px, 36px, 36px);
   }
 }
+
+.spinner {
+  animation: spinAround 500ms infinite linear;
+  border: 2px solid white;
+  border-radius: 290486px;
+  border-right-color: transparent;
+  border-top-color: transparent;
+  content: "";
+  display: block;
+  height: 1em;
+  position: relative;
+  width: 1em;
+}
+
+@keyframes spinAround {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+
+#account-dropdown {
+
+}
+
+hr {
+  border-style: solid;
+}
+
+.infadedown {
+  transform: translate3d(0, -200px, 0);
+  animation: infadedown 0.5s 1 ease forwards;
+  position: absolute;
+}
+
+@keyframes infadedown {
+  from {
+    transform: translate3d(0, -200px, 0);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+}
+
+.outfadeup {
+  animation: outfadeup 0.5s 1 ease forwards;
+  transform: translate3d(0, 0, 0);
+} 
+
+@keyframes outfadeup {
+  from {
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate3d(0, -200px, 0);
+    opacity: 0;
+  }
+}
+
+

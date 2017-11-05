@@ -14,7 +14,13 @@ module.exports = function (view) {
 }
 
 function initializing () {
-  return html`<body> Loading... </body>` 
+  return html`
+    <body class="flex">
+      <div class="hidden flex-auto flex justify-center items-center">
+        <div class="spinner mh3"> </div>
+        <div class="">Loading... </div>
+      </div>
+    </body>` 
 }
 
 function layout (view, state, emit) {
