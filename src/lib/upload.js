@@ -33,8 +33,6 @@ async function uploadSmallFile (file, onUploadProgress) {
       authorizationToken
     }
 
-    console.log(opts)
-
     var { fileId } = await uploadFile(opts, onUploadProgress)
 
     await finishSmallFile(fileId, file.hash, file.fileName, file.size)

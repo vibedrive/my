@@ -7,6 +7,7 @@ const tracks = require('./pages/tracks.page')
 const artists = require('./pages/artists.page')
 const labels = require('./pages/labels.page')
 const tags = require('./pages/tags.page')
+const playlists = require('./pages/playlists.page')
 
 const account = require('./pages/account.page')
 
@@ -25,6 +26,7 @@ app.route('/tracks', layout(tabs(tracks)))
 app.route('/artists', layout(tabs(artists)))
 app.route('/labels', layout(tabs(labels)))
 app.route('/tags', layout(tabs(tags)))
+app.route('/playlists', layout(tabs(playlists)))
 
 app.route('/account', layout(account))
 

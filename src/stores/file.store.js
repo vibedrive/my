@@ -9,7 +9,13 @@ const LOCAL_URL = 'https://localhost:5823'
 const FIVE_MB = 5 * 1000 * 1000
 const PART_SIZE = FIVE_MB
 
-module.exports = function (state, emitter) {
+module.exports = function (globalState, emitter) {
+  var state = {
+    uploading: []
+  }
+
+  globalState.files = state
+
   emitter.on('DOMContentLoaded', () => {
     emitter.on('upload', upload)
   })
@@ -21,14 +27,21 @@ module.exports = function (state, emitter) {
 
       if (type !== 'audio/mp3') return
 
-      file = await loadFile(file)
+      var len = state.uploading.push(Object.assign(file, { 
+        fileName: file.name,
+        progress: 0  
+      }))
 
+      emitter.emit('render')
+
+      var fileData = await loadFile(file)
       var uploaded = size < PART_SIZE
-        ? await uploadSmallFile(file, getOnUploadProgress(i))
-        : await uploadLargeFile(file, getOnUploadProgress(i))
-    
+        ? await uploadSmallFile(fileData, getOnUploadProgress(i))
+        : await uploadLargeFile(fileData, getOnUploadProgress(i))
       var track = await tracks.create(uploaded)
-      state.tracks = await tracks.get()
+
+      state.uploading[len - 1].progress = 100
+      globalState.tracks.push(track)
 
       emitter.emit('render')
     }
@@ -56,10 +69,9 @@ async function loadFile (file) {
         size: file.size,
         fileName: file.name,
         hash: multihash(data),
-        metadata
+        metadata,
+        progress: 0
       }
-
-      console.log(loaded)
 
       resolve(loaded)
     }))

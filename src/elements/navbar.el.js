@@ -2,7 +2,7 @@ const html = require('choo/html')
 
 module.exports = function navbar (state, emit) {
   return html`
-    <nav id="navbar" class="flex w-100 justify-between content-between" style="height: 3rem">
+    <nav id="navbar" class="flex w-100 justify-between content-between bg-near-black" style="height: 3rem">
       <div class="flex1 flex justify-start items-center pl3 pv2">
       </div>
 

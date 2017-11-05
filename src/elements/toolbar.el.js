@@ -29,15 +29,10 @@ module.exports = function toolbar (state, emit) {
         </button>
       </div>
       <div class="flex items-center pr3">
-        <input id="file-input" 
-          class="hidden" 
-          type="file" 
-          multiple 
-          onchange=${e => emit('upload', e.target.files)}/>
-        <label for="file-input" class="${toolbarButton} pointer">
+        <button class="${toolbarButton}" onclick=${e => emit('ui:toggle-upload-modal')}>
           <img class="button-icon mr2" src="/icons/ic_cloud_upload_black_48px.svg" />
           <span class="fw6">Upload Files</span>
-        </label>
+        </button>
       </div>
     </nav>
   `

@@ -5,6 +5,7 @@ const cols = [
   { name: 'Title', key: 'metadata.title', type: 'str' },
   { name: 'Artist', key: 'metadata.artist', type: 'str' },
   { name: 'Label', key: 'metadata.label', type: 'str' },
+  { name: 'Added on', key: 'metadata.addedOn', type: 'str' },
   { name: 'BPM', key: 'metadata.bpm', type: 'int' },
   { name: 'Key', key: 'metadata.key', type: 'str' },
   { name: 'Energy', key: 'metadata.energy', type: 'star' },
