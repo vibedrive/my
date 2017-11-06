@@ -1,6 +1,8 @@
+const sleep = require('../lib/sleep')
 const initialState = {
   accountDropdown: false,
-  uploadModal: false
+  uploadModal: false,
+  navigating: false
 }
 
 module.exports = function (globalState, emitter) {
@@ -12,6 +14,7 @@ module.exports = function (globalState, emitter) {
     emitter.on('ui:toggle-account-dropdown', toggleAccountDropdown)
     emitter.on('ui:toggle-upload-modal', toggleUploadModal)
     emitter.on('auth:logout', reset)
+    emitter.on('app:navigate', onNavigate)
   })
 
   function toggleAccountDropdown () {
@@ -28,5 +31,9 @@ module.exports = function (globalState, emitter) {
     for (let prop in initialState) {
       if (state.hasOwnProperty(prop)) state[prop] = initialState[prop]
     }
+  }
+
+  async function onNavigate (route) {
+    emitter.emit('render')
   }
 }

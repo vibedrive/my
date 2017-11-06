@@ -12,7 +12,7 @@ Notifications.prototype = Object.create(Nanocomponent.prototype)
 
 Notifications.prototype.createElement = function (state, emit) {
   this.el = html`
-    <div class="fixed top-0 right-0" style="height: 500px; width: 500px">
+    <div id="notification-area">
 
     </div>
   ` 
@@ -55,7 +55,7 @@ module.exports = Notifications()
 function getErrorEl (msg) {
   return html`
     <div class="infadedown">
-      <div class="bg-red pa3 ma4 w6 shadow-2 dim pointer">
+      <div class="bg-red pa3 ma4 w6 shadow-2 dim pointer pe-auto">
         ${msg}
       </div>
     </div>

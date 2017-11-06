@@ -4,6 +4,7 @@ var mm = require('musicmetadata')
 var tracks = require('../lib/tracks')
 var { uploadSmallFile, uploadLargeFile } = require('../lib/upload')
 var multihash = require('../lib/multihash')
+var Notifications = require('../components/Notifications')
 
 const LOCAL_URL = 'https://localhost:5823'
 const FIVE_MB = 5 * 1000 * 1000
@@ -25,7 +26,10 @@ module.exports = function (globalState, emitter) {
       var file = files[i]
       var { type, size } = file
 
-      if (type !== 'audio/mp3') return
+      if (type !== 'audio/mp3') {
+        Notifications.error('Sorry, Vibedrive only supports the mp3 format.')
+        return
+      }
 
       var len = state.uploading.push(Object.assign(file, { 
         fileName: file.name,

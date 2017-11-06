@@ -11,14 +11,14 @@ const tabs = [
 var active = 'bg-white black-80 cursor-default'
 
 module.exports = function tabsbar (state, emit) {
-  var isActive = tab => tab.route === state.route ? active : ''
+  var isActive = route => state.route === route ? active : ''
   return html`
     <nav id="tabsbar" class="h2 flex justify-center bg-near-black">
       <div class="flex flex-auto"></div>
       <div class="flex justify-between">
         ${tabs.map((tab, i) => html`
           <a class="flex1 w4 tc mh1" href=${tab.route}>
-            <div class="f6 fw5 w-100 b--white bw1 bt bl br br1 pv2 ${isActive(tab)}">
+            <div class="f6 fw5 w-100 b--white bw1 bt bl br br1 pv2 ${isActive(tab.route)}">
               ${tab.name}
             </div>
           </a>

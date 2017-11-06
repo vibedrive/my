@@ -147,6 +147,10 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
   transition: 0.3s;
 }
 
+.btn-hover:hover a {
+  color: #000;
+}
+
 .hidden {
   display: none;
 }
@@ -288,7 +292,7 @@ hr {
 
 .infadedown {
   transform: translate3d(0, -200px, 0);
-  animation: infadedown 0.5s 1 ease forwards;
+  animation: infadedown 0.75s 1 ease forwards;
   position: absolute;
 }
 
@@ -304,7 +308,7 @@ hr {
 }
 
 .outfadeup {
-  animation: outfadeup 0.5s 1 ease forwards;
+  animation: outfadeup 0.75s 1 ease forwards;
   transform: translate3d(0, 0, 0);
 } 
 
@@ -329,6 +333,17 @@ hr {
   opacity: 0;
 }
 
+.anim-fadeout-1 {
+  animation: anim-fadeout 0.1s 1 ease forwards;
+  opacity: 1;
+
+}
+
+.anim-fadein-1 {
+  animation: anim-fadein 0.1s 1 ease forwards;
+  opacity: 0;
+}
+
 @keyframes anim-fadeout {
   from {
     opacity: 1;
@@ -347,3 +362,16 @@ hr {
   }
 }
 
+#notification-area {
+  height: 500px; 
+  width: 500px; 
+  pointer-events: none;
+  position: fixed; 
+  top: 0; 
+  right: 0; 
+  z-index: 999999;
+}
+
+.pe-auto {
+  pointer-events: auto;
+}
