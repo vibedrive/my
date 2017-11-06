@@ -6,9 +6,7 @@ const TOKEN_KEY = 'vibedrive::access_token'
 const FIVE_MB = 5 * 1000 * 1000
 const PART_SIZE = FIVE_MB
 
-module.exports = { uploadSmallFile, uploadLargeFile }
-
-// --- temporary solution until b2 has cors support ---
+//  <-- temporary solution until b2 has cors support 
 
 async function proxyCall (b2URL, b2Headers, body) {
   b2Headers = JSON.stringify(b2Headers)
@@ -20,11 +18,23 @@ async function proxyCall (b2URL, b2Headers, body) {
   return http.post(opts).then(res => JSON.parse(res.body))
 }
 
-// --- smol file. ---
+//     ... temporary solution until b2 has cors support -->
+
+
+
+module.exports = { 
+  uploadSmallFile, 
+  uploadLargeFile 
+}
+
+
+
+// <--- Upload small files 
+
 
 async function uploadSmallFile (file, onUploadProgress) {
   try {
-    var { uploadUrl, authorizationToken } = await getUploadUrl()
+    var { uploadUrl, authorizationToken } = await getUploadUrl(file.size)
     var opts = {
       filename: file.fileName,
       data: file.data,
@@ -44,8 +54,8 @@ async function uploadSmallFile (file, onUploadProgress) {
   }
 }
 
-function getUploadUrl () {
-  var url = API_URL + '/upload/fileURL'
+function getUploadUrl (size) {
+  var url = API_URL + '/upload/fileURL' + '?size=' + size
   return http.get({ url, headers: getHeaders(), json: true })
 }
 
@@ -57,12 +67,13 @@ function uploadFile (opts, onUploadProgress) {
       'Authorization': authorizationToken,
       'Content-Type': 'b2/x-auto',
       'X-Bz-File-Name': filename,
-      'X-Bz-Content-Sha1': sha1(data),
-      // 'X-Bz-Test-Mode': 'fail_some_uploads'
+      'X-Bz-Content-Sha1': sha1(data)
     },
     body: data,
     json: true
   }
+
+  if (process.env.NODE_ENV === 'dev') headers['X-Bz-Test-Mode'] = 'fail_some_uploads'
 
   // b2 does not have cors support for now.
   // proxy the call
@@ -82,10 +93,17 @@ function finishSmallFile (fileId, multihash, filename, size) {
   })
 }
 
-// --- LARGE FILE ---
+//        ...upload small files ---> 
+
+
+
+
+
+
+// <--- Upload LARGE files 
 
 async function uploadLargeFile (file, onUploadProgress) { 
-  var { fileId } = await startLargeFile(file.fileName, file.hash)
+  var { fileId } = await startLargeFile(file.fileName, file.hash, file.size)
   var parts = splitFile(file.data)
   var partSha1Array = []
 
@@ -115,7 +133,7 @@ async function uploadLargeFile (file, onUploadProgress) {
     }
   }
 
-  await finishLargeFile(fileId, file.hash, file.name, partSha1Array)
+  await finishLargeFile(fileId, file.hash, file.fileName, partSha1Array)
 
   return Object.assign(file, { fileId })
 }
@@ -133,7 +151,7 @@ function splitFile (fileData) {
   return parts
 }
 
-function startLargeFile (fileName, multihash) {
+function startLargeFile (fileName, multihash, size) {
   var url = API_URL + '/upload/large'
 
   return http.post({ 
@@ -141,7 +159,8 @@ function startLargeFile (fileName, multihash) {
     headers: getHeaders(), 
     body: {
       fileName,
-      multihash
+      multihash, 
+      size
     },
     json: true 
   })
@@ -159,11 +178,12 @@ function uploadPart (part, onUploadProgress) {
     headers: {
       'Authorization': part.authorizationToken,
       'X-Bz-Part-Number': part.partNumber,
-      'X-Bz-Content-Sha1': part.partSha1,
-      // 'X-Bz-Test-Mode': 'fail_some_uploads'
+      'X-Bz-Content-Sha1': part.partSha1
     },
     body: part.data
   }
+
+  if (process.env.NODE_ENV === 'dev') headers['X-Bz-Test-Mode'] = 'fail_some_uploads'
 
   // b2 does not have cors support for now.
   // proxy the call
@@ -180,3 +200,8 @@ function finishLargeFile (fileId, multihash, fileName, partSha1Array) {
     json: true
   })
 }
+
+//        ...upload LARGE files ---> 
+
+
+

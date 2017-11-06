@@ -25,7 +25,7 @@ module.exports = function tracksPage (state, emit) {
   return html`
     <div class="flex flex-column flex-auto">
       ${toolbar(state, emit)}
-      <div id="table-container" class="flex flex-auto flex-column bg-light-gray" style="overflow-x: scroll">
+      <div id="table-container" class="flex flex-column bg-light-gray overflow-scroll">
 
         <div class="flex us-none b--silver h2 w-100 ">
           <div class="th pl3 pr4 pv1 " style="width: 2rem;"><input type="checkbox" /></div>

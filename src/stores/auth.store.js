@@ -9,6 +9,7 @@ const store = {
 const LOCAL_URL = 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
 const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
+const USAGE_URL = LOCAL_URL + '/account/usage'
 const SESSION_URL = LOCAL_URL + '/session'
 const CURRENT_USER_URL = LOCAL_URL + '/user'
 const LOGIN_URL = LOCAL_URL + '/login'
@@ -96,15 +97,31 @@ module.exports = function (state, emitter) {
   }
 
   async function initialize () {
+    state.user = await getUser() 
+    state.user.usage = await getUsage()
+    await database.init(state.user.email)
+    state.tracks = await store.tracks.get()
+    console.log(state.user)
+  }
+
+  async function getUser () {
     const opts = {
       url: CURRENT_USER_URL,
       headers: { authorization: state.tokens.accessToken },
       json: true
     }
 
-    state.user = await http.get(opts)
-    await database.init(state.user.email)
-    state.tracks = await store.tracks.get()
+    return http.get(opts)
+  }
+
+  async function getUsage () {
+    const opts = {
+      url: USAGE_URL,
+      headers: { authorization: state.tokens.accessToken },
+      json: true
+    }
+
+    return http.get(opts)
   }
 
   async function logout () {
