@@ -377,3 +377,6 @@ hr {
 .pe-auto {
   pointer-events: auto;
 }
+
+.half-waffle-square:after {
+}
