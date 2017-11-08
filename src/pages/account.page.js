@@ -1,4 +1,9 @@
 const html = require('choo/html')
+const filled = 'bg-white'
+const empty = 'bw1 b--white bt br bb bl'
+const half = empty + ' half-waffle-square'
+const wrows = Array(10).fill(0)
+const wcols = Array(10).fill(0)
 
 module.exports = function accountPage (state, emit) {
   var used = state.user.usage.used
@@ -19,13 +24,10 @@ module.exports = function accountPage (state, emit) {
             <div class="w-100 flex justify-center">
               <div class="flex flex-column">
                 
-                <div class="mv4">
+                <div class="">
                   <div class="bg-none" style="width: 256px; height: 256px">
                     ${waffleChart(percent)}
-                    <br>
-                    <p class="tc ma0">${state.tracks.length} tracks</p>
                   </div>
-                
                 </div>
                 
                 <div class="flex flex-row">
@@ -51,37 +53,22 @@ module.exports = function accountPage (state, emit) {
 }
 
 function waffleChart (percent) {
-  console.log(percent)
-
-  var rows = Array(10).fill(0)
-  var cols = Array(10).fill(0)
-  var filled = 'bg-white'
-  var empty = 'bw1 b--white bt br bb bl'
-  var half = empty + ' half-waffle-square'
+  var rounded = Math.round(percent)
 
   return html`
-    <div class="flex  items-center flex-column">
-      ${rows.map((r, ri) => html`
+    <div class="flex items-center flex-column-reverse">
+      ${wrows.map((row, rowIndex) => html`
         <div class="flex">
-          ${cols.map((c, ci) => {
-            var n = ((ri*10)+(ci)) + 1
-            var classes = n < percent 
-              ? filled 
-              : percent % 1 > 0.5 
-                ? half 
-                : empty 
+          ${wcols.map((col, columnIndex) => {
+            var n = ((rowIndex * 10) + (columnIndex)) + 1
+            var c = rounded >= n ? filled : empty
 
-            return html`
-              <div class="flex w1 h1 mr1 mb1 ${classes}"></div>
-            `})
-          }
+            return html`<div class="relative flex w1 h1 mr1 mb1 ${c}"></div>`
+          })}
         </div>
       `)}
-    </div>
-  `
+    </div>`
 }
-
-5.5
 
 function bytesToGB (b) {
   return b / (1 * 1000 * 1000 * 1000)

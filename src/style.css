@@ -379,4 +379,15 @@ hr {
 }
 
 .half-waffle-square:after {
+  width: 0; 
+  height: 0;
+  content: ''; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  
+  border-bottom: 10px solid white;
+  transform: rotate3d(0,0,1, 135deg);
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
