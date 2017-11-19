@@ -39,15 +39,15 @@ module.exports = function tracksPage (state, emit) {
           `)}
         </div>
 
-        <div class="bg-light-gray flex flex-auto flex-column ">      
+        <div class="bg-near-black flex flex-auto flex-column ">      
           ${rows.map((row, i) => html`
             <div class="flex">
-              <div class="td tc f7 pl3 pr4 pv1 bb bw1 b--moon-gray bg-white black-70 tc" style="width: 2rem;" >
+              <div class="td tc f7 pl3 pr4 pv1 bb bw1 b--black  white tc" style="width: 2rem;" >
                 ${i + 1}
               </div>
               ${cols.map(col => html`
                 <div class="flex">
-                  <div class="td pa-05 f7 fw5 bb br bw1 b--moon-gray bg-white black-70 cursor-default" style="width: 150px">
+                  <div class="td pa-05 f7 fw5 bb br bw1 b--black  white cursor-default" style="width: 150px">
                     ${fromRecursiveKey(row, col.key)}
                   </div>
                   <div></div>

@@ -65,8 +65,7 @@ module.exports = function (state, emitter) {
     await sleep(300)
 
     try {
-      var body = await http.post(opts)
-      var { refreshToken, accessToken } = body
+      var { refreshToken, accessToken } = await http.post(opts)
 
       saveSession(refreshToken, accessToken)
 
@@ -76,16 +75,34 @@ module.exports = function (state, emitter) {
 
       document.body.classList.remove('anim-fadein')
       document.body.classList.add('anim-fadeout')
+
       await sleep(500)
 
       emitter.emit(state.events.REPLACESTATE, '/tracks')
 
     } catch (err) {
-      console.error(err)
-      state.auth.password = ''
-      Notifications.error('Sorry, we don’t recognize that email or password.')
+      var errorMessage
+
+      if (typeof err === 'object' && err.statusCode) {
+        switch (err.statusCode) {
+          case 401:
+            errorMessage = 'Sorry, we don’t recognize that email or password.'
+            break
+          case 400:
+            errorMessage = 'Please enter a valid email and a password.'
+            break
+          default:
+            console.error(err)
+            errorMessage = 'There was an unexpected error.'
+            break
+        }
+      } else {
+        errorMessage = 'Could not connect to the server.'
+      }
+
+      Notifications.error(errorMessage)
       state.loggingIn = false
-      emitter.emit('render')  
+      emitter.emit('render')
     }
   }
 
@@ -101,7 +118,6 @@ module.exports = function (state, emitter) {
     state.user.usage = await getUsage()
     await database.init(state.user.email)
     state.tracks = await store.tracks.get()
-    console.log(state.user)
   }
 
   async function getUser () {
@@ -146,8 +162,8 @@ module.exports = function (state, emitter) {
   }
 
   function clearSession () {
-    localStorage.setItem(ACCESS_TOKEN_KEY, null)
-    localStorage.setItem(REFRESH_TOKEN_KEY, null)
+    localStorage.setItem(ACCESS_TOKEN_KEY, '')
+    localStorage.setItem(REFRESH_TOKEN_KEY, '')
     state.user = null
     state.tokens = {}
   }

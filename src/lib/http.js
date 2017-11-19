@@ -10,7 +10,7 @@ function promisify (fn) {
     return new Promise(function (resolve, reject) {
       fn(opts, function (err, res, body) {
         if (err) return reject(err)
-        if (!opts.json) return resolve(res)
+        if (res.statusCode !== 200) return reject(res)
         return resolve(body)
       })
     })
