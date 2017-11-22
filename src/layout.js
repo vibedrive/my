@@ -3,6 +3,7 @@ const login = require('./pages/login.page')
 const navbar = require('./elements/navbar.el')
 const uploadModal = require('./elements/upload-modal.el')
 const Notifications = require('./components/Notifications')
+const sidepanel = require('./elements/sidepanel.el')
 
 module.exports = function (view) {
   return function (state, emit) {
@@ -28,6 +29,7 @@ function layout (view, state, emit) {
   return html`
     <body class="flex flex-column anim-fadein">
       ${Notifications.render()}
+      ${sidepanel(state, emit)}
       ${uploadModal(state, emit)}
       ${navbar(state, emit)}
       ${view(state, emit)}

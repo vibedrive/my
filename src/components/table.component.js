@@ -2,6 +2,8 @@ var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var sleep = require('../lib/sleep')
 
+const Sidepanel = require('./sidepanel.component')
+
 function Table (cols) {
   if (!(this instanceof Table)) return new Table(cols)
   Nanocomponent.call(this)
@@ -11,7 +13,6 @@ function Table (cols) {
 Table.prototype = Object.create(Nanocomponent.prototype)
 
 Table.prototype.createElement = function (tracks) {
-  console.log(tracks)
 
   this.el = html`
     <div id="table-container" class="flex flex-column bg-light-gray overflow-scroll">
@@ -111,6 +112,11 @@ function getCellEl (columnType, value) {
 function imgEl (url = '#') {
   return html`
     <div><img src="${url}"/></div>`
+}
+
+function linkEl (value = '') {
+  return html`
+    <a>${value}</a>`
 }
 
 function strEl (value = '') {
