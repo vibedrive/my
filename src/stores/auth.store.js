@@ -1,10 +1,6 @@
 const http = require('../lib/http')
 const sleep = require('../lib/sleep')
 const Notifications = require('../components/notifications')
-const database = require('../lib/db')
-const store = {
-  tracks: require('../lib/tracks')
-}
 
 const LOCAL_URL = 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
@@ -22,13 +18,13 @@ module.exports = function (state, emitter) {
     email: '',
     password: ''
   }
+
   state.tokens = {
     refreshToken: null,
     accessToken: null
   }
 
   state.tracks = []
-
   state.user = null
 
   emitter.on('DOMContentLoaded', () => {
@@ -38,6 +34,13 @@ module.exports = function (state, emitter) {
     emitter.on('auth:input-email', inputEmail)
     emitter.on('auth:input-password', inputPassword)
   })
+
+  async function initialize () {
+    state.user = await getUser() 
+    state.user.usage = await getUsage()
+    var payload = { email: state.user.email, accessToken: state.tokens.accessToken }
+    emitter.emit('track:init-store', payload)
+  }
 
   function inputEmail (value) {
     state.auth.email = value
@@ -69,7 +72,7 @@ module.exports = function (state, emitter) {
 
       saveSession(refreshToken, accessToken)
 
-      await initialize()
+      await initialize(email, password)
 
       state.loggingIn = false
 
@@ -100,6 +103,8 @@ module.exports = function (state, emitter) {
         errorMessage = 'Could not connect to the server.'
       }
 
+      console.log(err)
+
       Notifications.error(errorMessage)
       state.loggingIn = false
       emitter.emit('render')
@@ -111,13 +116,6 @@ module.exports = function (state, emitter) {
     localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
     state.tokens.refreshToken = refreshToken
     state.tokens.accessToken = accessToken
-  }
-
-  async function initialize () {
-    state.user = await getUser() 
-    state.user.usage = await getUsage()
-    await database.init(state.user.email)
-    state.tracks = await store.tracks.get()
   }
 
   async function getUser () {
