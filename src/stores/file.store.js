@@ -1,7 +1,6 @@
 var concat = require('concat-stream')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
-var tracks = require('../lib/tracks')
 var { uploadSmallFile, uploadLargeFile } = require('../lib/upload')
 var multihash = require('../lib/multihash')
 var Notifications = require('../components/Notifications')
@@ -42,11 +41,9 @@ module.exports = function (globalState, emitter) {
       var uploaded = size < PART_SIZE
         ? await uploadSmallFile(fileData, getOnUploadProgress(i))
         : await uploadLargeFile(fileData, getOnUploadProgress(i))
-      var track = await tracks.create(uploaded)
 
+      emitter.emit('track:create', uploaded)
       state.uploading[len - 1].progress = 100
-      globalState.tracks.push(track)
-
       emitter.emit('render')
     }
   }

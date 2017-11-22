@@ -7,7 +7,14 @@ var pouch, remote
 module.exports = function (state, emitter) {
   emitter.on('DOMContentLoaded', function () {
     emitter.on('track:init-store', initStore)
+    emitter.on('track:create', createTrack)
   })
+
+  async function createTrack (file) {
+    var track = await createTrackDocument(file) 
+    state.tracks.push(track)
+    emitter.emit('render')
+  } 
 
   async function initStore (payload) {
     var { email, accessToken } = payload
@@ -72,7 +79,7 @@ async function getTracks (ids) {
     .filter(doc => doc.type === 'track' && (!ids || ids.includes(doc._id)))
 }
 
-async function createTrack (file) {
+async function createTrackDocument (file) {
   var empty = { value: null }
   var { metadata } = file
   var doc = {
