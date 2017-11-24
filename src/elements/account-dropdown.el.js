@@ -4,9 +4,10 @@ module.exports = function accountDropdown (state, emit) {
   return !state.ui.accountDropdown 
     ? html`<div class="hidden"></div>`
     : html`
-        <div>
+        <div class="block fixed left-0 right-0 top-0 bottom-0">
+
           <div id="account-dropdown"
-            class="z-4 shadow-1 fixed br1 top-1 right-0 mt4 mh3 bg-white black-70 pv2 ph2">
+            class="absolute right-0 z-3 shadow-1 br1 mt4 mh3 bg-white black-70 pv2 ph2">
             <div>
               <div class="f6 fw5">Account</div>
               <hr class="mv2 b--moon-gray" />
@@ -27,7 +28,7 @@ module.exports = function accountDropdown (state, emit) {
           </div>
 
           <div 
-            class="fixed left-0 right-0 top-0 bottom-0 bg-black-20 z-3"
+            class="fixed left-0 right-0 top-0 bottom-0 bg-black-20 z-2"
             onclick=${e => emit('ui:toggle-account-dropdown')}>
           </div>
 

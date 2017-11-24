@@ -22,6 +22,7 @@ compileCSS(function (err) {
     port: 1111,
     live: true,
     ssl: true,
+    pushstate: true,
     stream: process.stdout,
     watchGlob: 'src/**/*.{sss,js}',
     staticOptions: {

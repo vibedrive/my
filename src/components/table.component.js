@@ -1,8 +1,9 @@
 var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var sleep = require('../lib/sleep')
+var Sidepanel = require('./sidepanel.component')
 
-const Sidepanel = require('./sidepanel.component')
+const DEFAULT_CELL_WIDTH = 160
 
 function Table (cols) {
   if (!(this instanceof Table)) return new Table(cols)
@@ -15,7 +16,7 @@ Table.prototype = Object.create(Nanocomponent.prototype)
 Table.prototype.createElement = function (tracks) {
 
   this.el = html`
-    <div id="table-container" class="flex flex-column bg-light-gray overflow-scroll">
+    <div id="table-container" class="flex flex-column overflow-scroll">
 
       <div class="flex us-none b--silver h2 w-100 ">
         <div class="th pl3 pr4 pv1 " style="width: 2rem;"><input type="checkbox" /></div>
@@ -36,8 +37,8 @@ Table.prototype.update = function (tracks) {
 
 function thEl (col) {
   return html`
-    <div class="th flex bg-light-gray relative" style="width: ${col.width || 80}px">
-      <div class="f6 fw5 pa-05 flex items-center black-70 cursor-default" style="width: 150px;">
+    <div class="th flex relative" style="width: ${col.width || DEFAULT_CELL_WIDTH}px">
+      <div class="f6 fw5 pa-05 flex items-center cursor-default" style="width: 150px;">
         <span class="has-caret" style="">${col.name}</span>
       </div>
       <div class="sep" onmousedown=${onMouseDown}>
@@ -68,12 +69,12 @@ function thEl (col) {
 function trEl (row, i) {
   return html`
     <div class="flex">
-      <div class="td tc f7 pl3 pr4 pv1 bb bw1 b--black  white tc" style="width: 2rem;" >
+      <div class="td tc f7 pl3 pr4 pv1 tc" style="width: 2rem;" >
         ${i + 1}
       </div>
       ${this.cols.map(col => html`
-        <div class="flex" style="width: ${col.width || 80}px">
-          <div class="td pa-05 f7 fw5 bb br bw1 b--black  white cursor-default" style="width: 150px">
+        <div class="flex" style="width: ${col.width || DEFAULT_CELL_WIDTH}px">
+          <div class="td pa-05 f7 fw5 cursor-default" style="width: 150px">
             ${fromRecursiveKey(row, col.key)}
           </div>
           <div></div>

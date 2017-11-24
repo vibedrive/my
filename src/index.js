@@ -19,15 +19,15 @@ app.use(require('./stores/track.store'))
 app.use(require('./stores/ui.store'))
 
 
-app.route('*', layout(tabs(tracks)))
+app.route('*', layout(tracks))
 
-app.route('/', layout(tabs(tracks)))
+app.route('/', layout(tracks))
 
-app.route('/tracks', layout(tabs(tracks)))
-app.route('/artists', layout(tabs(artists)))
-app.route('/labels', layout(tabs(labels)))
-app.route('/tags', layout(tabs(tags)))
-app.route('/playlists', layout(tabs(playlists)))
+app.route('/tracks', layout(tracks))
+app.route('/artists', layout(tracks))
+app.route('/labels', layout(tracks))
+app.route('/tags', layout(tracks))
+app.route('/playlists', layout(playlists))
 
 app.route('/account', layout(account))
 
