@@ -1,0 +1,56 @@
+html
+  height: 100%
+  max-height: 100%
+  overflow-y: hidden
+  box-sizing: border-box
+
+*,
+*:before,
+*:after
+  box-sizing: inherit
+
+
+body
+  min-height: 100%
+  margin: 0
+  text-rendering: optimizeLegibility
+  -webkit-font-smoothing: antialiased
+  font-family: $font
+ 
+html, body
+  background-color: $dark-grey
+  color: $white
+
+a
+  color: $blue
+
+button 
+  border: none
+
+  &.is-loading
+    color: transparent !important
+    pointer-events: none
+    position: relative
+
+  &.is-loading:after
+    position: absolute
+    left: calc(50% - (1em / 2))
+    top: calc(50% - (1em / 2))
+    position: absolute !important
+    @extend .spinner
+
+input[type=text], 
+input[type=password]
+  border: none
+
+input:-webkit-autofill, 
+textarea:-webkit-autofill, 
+select:-webkit-autofill
+  background-color: $white
+
+::selection 
+  background-color: $purple
+  color: $white
+::-moz-selection
+  background-color: $purple
+  color: $white
