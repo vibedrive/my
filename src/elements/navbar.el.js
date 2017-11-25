@@ -5,7 +5,7 @@ module.exports = function navbar (state, emit) {
   return html`
     <nav id="navbar" class="flex w-100 justify-between content-between bg-black">
 
-      <div class="flex1 flex justify-center items-center">
+      <div class="flex1 flex justify-start items-center">
 
           <a href="/tracks">
             <img src="images/logo.svg" class="ma2"/>

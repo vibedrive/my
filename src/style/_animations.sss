@@ -1,0 +1,68 @@
+.infadedown
+  transform: translate3d(0, -200px, 0)
+  animation: infadedown 0.75s 1 ease forwards
+  position: absolute
+
+.outfadeup 
+  animation: outfadeup 0.75s 1 ease forwards
+  transform: translate3d(0, 0, 0)
+
+.anim-fadeout 
+  animation: anim-fadeout 0.5s 1 ease forwards
+  opacity: 1
+
+.anim-fadein
+  animation: anim-fadein 0.5s 1 ease forwards
+  opacity: 0
+
+.anim-fadeout-1 
+  animation: anim-fadeout 0.1s 1 ease forwards
+  opacity: 1
+
+.anim-fadein-1
+  animation: anim-fadein 0.1s 1 ease forwards
+  opacity: 0
+
+@keyframes infadedown
+  from 
+    transform: translate3d(0, -200px, 0)
+    opacity: 0
+  to 
+    transform: translate3d(0, 0, 0)
+    opacity: 1
+
+@keyframes outfadeup
+  from 
+    transform: translate3d(0, 0, 0)
+    opacity: 1
+  to 
+    transform: translate3d(0, -200px, 0)
+    opacity: 0
+
+@keyframes anim-fadeout
+  from
+    opacity: 1
+  to
+    opacity: 0
+
+@keyframes anim-fadein
+  from 
+    opacity: 0
+  to 
+    opacity: 1
+
+@keyframes spinAround
+  from 
+    transform: rotate(0deg)
+  to 
+    transform: rotate(359deg)
+
+@keyframes clipMe
+  0%, 100%
+    clip: rect(0px, 36px, 1px, 0px)
+  25%
+    clip: rect(0px, 1px, 36px, 0px)
+  50%
+    clip: rect(36px, 36px, 36px, 0px)
+  75% 
+    clip: rect(0px, 36px, 36px, 36px)

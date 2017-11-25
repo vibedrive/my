@@ -11,6 +11,7 @@ html
 
 
 body
+  position: relative
   min-height: 100%
   margin: 0
   text-rendering: optimizeLegibility
@@ -23,9 +24,16 @@ html, body
 
 a
   color: $blue
+  &:hover
+    color: white
+    transition: 0.5s
+
+hr 
+  border-style: solid
 
 button 
   border: none
+  cursor: pointer
 
   &.is-loading
     color: transparent !important
@@ -38,6 +46,11 @@ button
     top: calc(50% - (1em / 2))
     position: absolute !important
     @extend .spinner
+
+button.is-loading.bg-white:after
+  border: 3px solid #333
+  border-right-color: transparent
+  border-top-color: transparent
 
 input[type=text], 
 input[type=password]

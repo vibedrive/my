@@ -1,3 +1,16 @@
+.bg-black
+  background-color: $black
+
+.bg-near-black
+  background-color: $near-black
+
+.hidden
+  display: none
+
+.button-icon 
+  width: 1.25rem
+  height: 1.25rem
+
 .spinner
   animation: spinAround 500ms infinite linear
   border: 2px solid white
@@ -9,3 +22,54 @@
   height: 1em
   position: relative
   width: 1em
+
+.bg-none
+  background: none
+
+.flex1
+  flex: 1
+
+.bw1
+  border-width: 1px
+
+.br1 
+  border-radius: 1px
+
+.pe-auto 
+  pointer-events: auto
+
+.hidden
+  display: none
+
+.lh-none
+  line-height: 0
+
+.cursor-default
+  cursor: default
+
+.th
+  border-top: 2px solid #bbb
+  border-bottom: 1px solid #aaa
+
+.td
+  cursor: default
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.pa-05
+  padding: .5rem
+
+.dim
+  opacity: 1
+  transition: opacity .15s ease-in
+  &:hover,
+  &:focus
+    opacity: .8
+    transition: opacity .15s ease-in
+  &:active 
+    opacity: .9
+    transition: opacity .15s ease-out
+
+.has-caret:after
+  content: '▼'
