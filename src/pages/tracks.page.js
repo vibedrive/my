@@ -3,7 +3,7 @@ var Table = require('../components/table.component')
 var toolbar = require('../elements/toolbar.el')
 
 const cols = [
-  { name: 'Cover', key: 'cover.id', type: 'img', width: 60 },
+  { name: 'Cover', key: 'cover.id', type: 'img', width: 4 },
   { name: 'Title', key: 'metadata.title', type: 'str' },
   { name: 'Artist', key: 'metadata.artist', type: 'str' },
   { name: 'Label', key: 'metadata.label', type: 'str' },
@@ -25,9 +25,11 @@ var table = Table(cols)
 
 module.exports = function tracksPage (state, emit) {
   return html`
-    <div class="flex flex-column flex-auto">
+    <div class="flex flex-column flex-auto h-100">
       ${toolbar(state, emit)}
-      ${table.render(state.tracks)}
+      <main class="flex flex-column flex-auto ph3 w-100 h-100 bg-dark-grey">
+        ${table.render(state.tracks)}
+      </main>
     </div>
   `
 }

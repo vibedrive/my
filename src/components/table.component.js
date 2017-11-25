@@ -3,7 +3,7 @@ var Nanocomponent = require('nanocomponent')
 var sleep = require('../lib/sleep')
 var Sidepanel = require('./sidepanel.component')
 
-const DEFAULT_CELL_WIDTH = 160
+const DEFAULT_CELL_WIDTH = 15
 
 function Table (cols) {
   if (!(this instanceof Table)) return new Table(cols)
@@ -16,14 +16,16 @@ Table.prototype = Object.create(Nanocomponent.prototype)
 Table.prototype.createElement = function (tracks) {
 
   this.el = html`
-    <div id="table-container" class="flex flex-column overflow-scroll">
+    <div id="table-container" class="flex flex-column mv3">
 
-      <div class="flex us-none b--silver h2 w-100 ">
-        <div class="th pl3 pr4 pv1 " style="width: 2rem;"><input type="checkbox" /></div>
+      <div class="flex us-none h3 w-100 items-end pv3">
+        <div class="th pl3 pr4 " style="width: 2rem;">
+
+        </div>
         ${this.cols.map((col) => thEl(col))}
       </div>
 
-      <div class="bg-near-black flex flex-auto flex-column ">      
+      <div class=" flex flex-auto flex-column">      
         ${tracks.map((track, i) => trEl.call(this, track, i))}
       </div>
     </div>`
@@ -37,13 +39,10 @@ Table.prototype.update = function (tracks) {
 
 function thEl (col) {
   return html`
-    <div class="th flex relative" style="width: ${col.width || DEFAULT_CELL_WIDTH}px">
-      <div class="f6 fw5 pa-05 flex items-center cursor-default" style="width: 150px;">
-        <span class="has-caret" style="">${col.name}</span>
-      </div>
-      <div class="sep" onmousedown=${onMouseDown}>
-        <div></div>
-      </div>
+    <div class="th flex relative pure-white ph2 fw7" style="width: ${col.width || DEFAULT_CELL_WIDTH}rem">
+
+      <span>${col.name}</span>
+
     </div>`
 
   async function onMouseDown (e) {
@@ -68,16 +67,15 @@ function thEl (col) {
 
 function trEl (row, i) {
   return html`
-    <div class="flex">
-      <div class="td tc f7 pl3 pr4 pv1 tc" style="width: 2rem;" >
+    <div class="flex table-row">
+      <div class="flex td tc f7 pl3 pr4 pv1 tc items-center h3" style="width: 2rem;" >
         ${i + 1}
       </div>
       ${this.cols.map(col => html`
-        <div class="flex" style="width: ${col.width || DEFAULT_CELL_WIDTH}px">
-          <div class="td pa-05 f7 fw5 cursor-default" style="width: 150px">
-            ${fromRecursiveKey(row, col.key)}
-          </div>
-          <div></div>
+        <div class="flex f6 items-center ph2" style="width: ${col.width || DEFAULT_CELL_WIDTH}rem">
+
+            ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
+
         </div>
       `)}
     </div>`
@@ -110,9 +108,10 @@ function getCellEl (columnType, value) {
   }[columnType](value)
 }
 
-function imgEl (url = '#') {
-  return html`
-    <div><img src="${url}"/></div>`
+function imgEl (url) {
+  return url
+    ? html`<div class="w-100 h-100 flex items-center justify-start pl1"><img src=${url} class="w2 h2 bg-black"/></div>`
+    : html`<div class="w-100 h-100 flex items-center justify-start pl1"><img class="w2 h2 bg-black"/></div>`
 }
 
 function linkEl (value = '') {

@@ -7,7 +7,7 @@ module.exports = function accountDropdown (state, emit) {
         <div class="block fixed left-0 right-0 top-0 bottom-0">
 
           <div id="account-dropdown"
-            class="absolute right-0 z-3 shadow-1 br1 mt4 mh3 bg-white black-70 pv2 ph2">
+            class="absolute right-0 z-3 shadow-1 br1 mt5 mh3 bg-white black-70 pv2 ph2">
             <div>
               <div class="f6 fw5">Account</div>
               <hr class="mv2 b--moon-gray" />
