@@ -5,10 +5,19 @@ const REMOTE_URL = 'localhost:5823/userdb'
 var pouch, remote
 
 module.exports = function (state, emitter) {
+  state.tracks = []
+  state.selectedTrack = null
+
   emitter.on('DOMContentLoaded', function () {
+    emitter.on('track:select-track', selectTrack)
     emitter.on('track:init-store', initStore)
     emitter.on('track:create', createTrack)
   })
+
+  function selectTrack (track) {
+    state.selectedTrack = track
+    emitter.emit('render')
+  }
 
   async function createTrack (file) {
     var track = await createTrackDocument(file) 
@@ -40,6 +49,7 @@ module.exports = function (state, emitter) {
       .on('error', onError)
 
     state.tracks = await getTracks()
+    state.selectedTrack = state.tracks[0]
     emitter.emit('render')
   }
 
@@ -75,7 +85,12 @@ async function getTracks (ids) {
   var docs = await pouch.allDocs({ include_docs: true })
 
   return docs.rows
-    .map(r => r.doc)
+    .map(r => {
+      if (r.doc.metadata.picture) {
+        r.doc.imageURL = createImageURL(r.doc.metadata.picture[0])
+      }
+      return r.doc
+    })
     .filter(doc => doc.type === 'track' && (!ids || ids.includes(doc._id)))
 }
 
@@ -86,6 +101,7 @@ async function createTrackDocument (file) {
     _id: file.hash,
     type: 'track',
     metadata: {
+      picture: metadata.picture,
       title: metadata.title,
       label: metadata.label,
       BPM: metadata.bpm,
@@ -130,4 +146,14 @@ function hexEncode (str) {
   }
 
   return result
+}
+
+function createImageURL (picture) {
+  if (!picture) return ''
+
+  const buf = Buffer.from(picture.data)
+  const type = picture.format
+  const blob = new Blob([buf], { type })
+
+  return URL.createObjectURL(blob)
 }

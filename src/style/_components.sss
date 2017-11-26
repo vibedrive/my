@@ -68,6 +68,42 @@
     animation: clipMe 8s linear infinite
 
 .table-row
+  user-select: none
+  .cover
+    position: relative 
+    .play-button
+      opacity: 0
+      left: 0.75rem
   &:hover
-    background-color: $black
+    background-color: $near-black
     transition: 0.2s
+    .cover .play-button
+      opacity: 1
+      transition: 0.2s
+  &.selected
+    background-color: $black
+
+#upload-modal-container
+  &.is-hidden
+    opacity: 0
+  &.will-close
+    opacity: 1
+    animation: fadeout 0.2s 1 ease forwards
+  &.is-hidden.will-open
+    opacity: 0
+    animation: fadein 0.2s 1 ease forwards
+
+#account-dropdown
+  .menu .menu-item:hover
+    background-color: $near-black
+
+#sidepanel
+  overflow-y: scroll
+  &.is-hidden
+    transform: translate3d(100%, 0, 0)
+  &.will-close
+    animation: slideoutright 0.3s 1 ease forwards
+  &.is-hidden.will-open
+    opacity: 1
+    animation: slideinright 0.3s 1 ease forwards
+  

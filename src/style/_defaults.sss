@@ -11,21 +11,32 @@ html
 body
   position: relative
   min-height: 100%
-  margin: 5rem 0
+  height: 100%
   text-rendering: optimizeLegibility
   -webkit-font-smoothing: antialiased
   font-family: $font
+  overflow-y: scroll
 
 html, body
-  background-color: $near-black
+  background-color: $dark-grey
   color: $white
 
+main
+  margin: 4rem 0
+  width: 100%
+  min-height: 100%
+  background-color: $dark-grey
 
 a
   color: $blue
   &:hover
     color: white
     transition: 0.5s
+
+input
+  font-family: $font 
+  &:focus 
+    outline: 2px solid $purple
 
 hr 
   border-style: solid
@@ -34,6 +45,16 @@ button
   border: none
   border-radius: 1px
   cursor: pointer
+
+  &:not(:active):focus
+    outline: 2px solid $purple
+
+  &:active
+    outline: none !important
+    transform: translate3d(0, 2px, 0)
+
+  &:hover
+    outline: none !important
 
   &.is-loading
     color: transparent !important

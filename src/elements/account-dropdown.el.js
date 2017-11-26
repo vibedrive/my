@@ -6,21 +6,19 @@ module.exports = function accountDropdown (state, emit) {
     : html`
         <div class="block fixed left-0 right-0 top-0 bottom-0">
 
-          <div id="account-dropdown"
-            class="absolute right-0 z-3 shadow-1 br1 mt5 mh3 bg-white black-70 pv2 ph2">
-            <div>
-              <div class="f6 fw5">Account</div>
-              <hr class="mv2 b--moon-gray" />
-              <div class="pv2 ph2 f6 fw5 gray">${state.user.email}</div>
-              <div class="pv2 ph2 pointer btn-hover" 
+          <div id="account-dropdown" class="absolute right-0 z-3 br1 mt5 bg-black pv3 ph3">
+            <div class="pv2 ph2 f6 fw5 gray">${state.user.email}</div>
+
+            <div class="menu mv3">
+              <div class="pv2 ph2 pointer menu-item" 
                   onclick=${e => navigate('/account')}>
-                <a class="f6 black-70" >
+                <a class="f6 white" >
                   Account
                 </a>
               </div>      
-              <div class="pv2 ph2 pointer btn-hover" 
+              <div class="pv2 ph2 pointer menu-item" 
                   onclick=${e => emit('auth:logout')}>
-                <a class="f6 black-70" >
+                <a class="f6 white" >
                   Logout
                 </a>
               </div>      
@@ -28,7 +26,7 @@ module.exports = function accountDropdown (state, emit) {
           </div>
 
           <div 
-            class="fixed left-0 right-0 top-0 bottom-0 bg-black-20 z-2"
+            class="fixed left-0 right-0 top-0 bottom-0 bg-none z-2"
             onclick=${e => emit('ui:toggle-account-dropdown')}>
           </div>
 

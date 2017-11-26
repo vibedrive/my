@@ -24,7 +24,6 @@ module.exports = function (state, emitter) {
     accessToken: null
   }
 
-  state.tracks = []
   state.user = null
 
   emitter.on('DOMContentLoaded', () => {

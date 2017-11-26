@@ -3,11 +3,9 @@ var Notifications = require('../components/notifications')
 
 module.exports = function (state, emit) {
   return html`
-    <body class="flex anim-fadein">
+    <body class="anim-fadein vh-100">
       ${Notifications.render()}
-      <section class="flex flex-auto justify-center items-center flex-column ">
-
-        <div class="flex-auto flex items-center">
+      <section class="bg-black flex justify-center items-center h-100" >
           <div class="" style="min-width: 480px">
             <div class="">
 
@@ -68,7 +66,6 @@ module.exports = function (state, emit) {
 
             </div>
           </div>
-        </div>
 
       </section>
     </body>`

@@ -1,7 +1,6 @@
 var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var sleep = require('../lib/sleep')
-var Sidepanel = require('./sidepanel.component')
 
 const DEFAULT_CELL_WIDTH = 15
 
@@ -13,7 +12,12 @@ function Table (cols) {
 
 Table.prototype = Object.create(Nanocomponent.prototype)
 
-Table.prototype.createElement = function (tracks) {
+Table.prototype.createElement = function (state, emit) {
+  const { tracks, selectedTrack } = state
+  
+  this.tracks = tracks
+  this.selectedTrack = selectedTrack
+  this.emit = emit
 
   this.el = html`
     <div id="table-container" class="flex flex-column mv3">
@@ -26,15 +30,18 @@ Table.prototype.createElement = function (tracks) {
       </div>
 
       <div class=" flex flex-auto flex-column">      
-        ${tracks.map((track, i) => trEl.call(this, track, i))}
+        ${tracks.map((track, i) => {
+          return trEl.call(this, track, i)
+        })}
       </div>
     </div>`
 
   return this.el
 }
 
-Table.prototype.update = function (tracks) {
-  return this.tracks !== tracks
+Table.prototype.update = function (state, emit) {
+  this.emit = emit 
+  return (state.tracks !== this.tracks) || (state.selectedTrack !== this.selectedTrack)
 }
 
 function thEl (col) {
@@ -66,19 +73,41 @@ function thEl (col) {
 }
 
 function trEl (row, i) {
+  var selected = this.selectedTrack && this.selectedTrack._id === row._id
+  var c = selected ? 'selected' : ''
+
   return html`
-    <div class="flex table-row">
+    <div class="${c} flex table-row" onclick=${e => handleClick.call(this, e)}>
       <div class="flex td tc f7 pl3 pr4 pv1 tc items-center h3" style="width: 2rem;" >
         ${i + 1}
       </div>
       ${this.cols.map(col => html`
         <div class="flex f6 items-center ph2" style="width: ${col.width || DEFAULT_CELL_WIDTH}rem">
 
-            ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
+          ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
 
         </div>
       `)}
     </div>`
+
+  function handleClick (e) {
+    var self = this
+
+    if (this.selectedTrack._id !== row._id) {
+      this.emit('track:select-track', row)
+    }
+
+    e.target.addEventListener('click', onSecondClick)
+
+    var timer = setTimeout(function () {
+      e.target.removeEventListener('click', onSecondClick)
+      clearTimeout(timer)
+    }, 300)
+
+    function onSecondClick () {
+      self.emit('ui:open-sidepanel')  
+    }
+  }
 }
 
 function fromRecursiveKey (row, key) {
@@ -104,8 +133,26 @@ function getCellEl (columnType, value) {
     str: strEl,
     int: strEl,
     star: starEl,
-    tags: tagsEl
+    tags: tagsEl,
+    cover: coverEl
   }[columnType](value)
+}
+
+function coverEl (url) {
+  return html`
+    <div class="cover w-100 h-100 flex items-center justify-start pl1">
+      <a class="absolute play-button pointer" onclick=${play}>
+        <svg class="ic-white" style="width:1rem; height: 1rem;">
+          <use xlink:href="icons/openiconic.svg#si-open-play-circle" />
+        </svg>
+      </a>
+      <img ${url ? 'src=' + url : ''} class="w2 h2 bg-black"/>
+    </div>`
+
+  function play (e) {
+    e.preventDefault()
+    console.log('play!')
+  }
 }
 
 function imgEl (url) {

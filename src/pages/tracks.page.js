@@ -1,9 +1,10 @@
 var html = require('choo/html')
 var Table = require('../components/table.component')
 var toolbar = require('../elements/toolbar.el')
+const sidepanel = require('../elements/sidepanel.el')
 
 const cols = [
-  { name: 'Cover', key: 'cover.id', type: 'img', width: 4 },
+  { name: '', key: 'cover.id', type: 'cover', width: 4 },
   { name: 'Title', key: 'metadata.title', type: 'str' },
   { name: 'Artist', key: 'metadata.artist', type: 'str' },
   { name: 'Label', key: 'metadata.label', type: 'str' },
@@ -27,9 +28,10 @@ module.exports = function tracksPage (state, emit) {
   return html`
     <div class="flex flex-column flex-auto h-100">
       ${toolbar(state, emit)}
-      <main class="flex flex-column flex-auto ph3 w-100 h-100 bg-dark-grey">
-        ${table.render(state.tracks)}
-      </main>
+      ${sidepanel(state, emit)}
+      <div class="flex flex-column flex-auto ph3 w-100 h-100 bg-dark-grey">
+        ${table.render(state, emit)}
+      </div>
     </div>
   `
 }

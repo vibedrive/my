@@ -2,12 +2,12 @@ const html = require('choo/html')
 
 module.exports = function toolbar (state, emit) {
   return html`
-    <nav class="flex items-center w-100 h3 justify-between fixed bottom-0 bg-near-black ph3">
+    <nav class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
 
       <div class="flex items-center w-30 ">
 
         <div class="flex flex-row">
-          <div>
+          <div class="us-none">
             <img class="w2 h2 mh2 mv0" />
           </div>
 
@@ -19,29 +19,29 @@ module.exports = function toolbar (state, emit) {
 
       </div>
 
-      <div class="flex-auto items-center">
-        <div>
-          <button class="w2 h2 mh2 bg-none">
+      <div class="flex-auto flex items-center h-100 us-none">
+        
+          <a class=" flex items-center w2 h2 mh3 bg-none pointer">
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-step-backward" />
             </svg>
-          </button>
-          <button class="w2 h2 mh2 bg-none">
+          </a>
+          <a class=" flex items-center w2 h2 mh3 bg-none pointer">
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-play" />
             </svg>
-          </button>
-          <button class="w2 h2 mh2 bg-none">
+          </a>
+          <a class=" flex items-center w2 h2 mh3 bg-none pointer">
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-step-forward" />
             </svg>
-          </button>
-        </div>
+          </a>
+     
       </div>
 
-      <div class="flex items-center w-50">
+      <div class="flex items-center w-50 h-100 us-none">
         <div class="f7 mh3">0:21</div>
-        <div class="flex-auto mh3 relative">
+        <div class="flex-auto flex items-center mh3 relative pointer h-25">
           <div class="absolute left-0 bg-light-grey w-100" style="height: 2px"></div>
           <div class="absolute left-0 bg-blue w-30" style="height: 2px"></div>
         </div>
