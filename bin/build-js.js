@@ -21,7 +21,7 @@ module.exports = function (done) {
     .transform(babelify, babelifyOpts)
     .transform('loose-envify')
     .transform(yoyoify)
-    .transform(uglifyify)
+    // .transform(uglifyify)
 
   b.bundle()
     .on('error', done)
