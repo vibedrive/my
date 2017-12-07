@@ -140,7 +140,7 @@ async function createTrackDocument (file) {
 function hexEncode (str) {
   var result = ''
 
-  for (i = 0; i < str.length; i++) {
+  for (var i = 0; i < str.length; i++) {
     var hex = str.charCodeAt(i).toString(16)
     result += hex
   }
