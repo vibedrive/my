@@ -28,6 +28,7 @@
     "yo-yoify": "^4.2.0"
   },
   "dependencies": {
+    "babel-polyfill": "^6.26.0",
     "choo": "^6.5.1",
     "concat-stream": "^1.6.0",
     "filereader-stream": "^1.0.0",
