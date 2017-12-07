@@ -3,7 +3,7 @@ var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
 var { uploadSmallFile, uploadLargeFile } = require('../lib/upload')
 var multihash = require('../lib/multihash')
-var Notifications = require('../components/Notifications')
+var Notifications = require('../components/notifications')
 
 const LOCAL_URL = process.env.API_URL || 'https://localhost:5823'
 const FIVE_MB = 5 * 1000 * 1000

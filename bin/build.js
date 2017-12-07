@@ -19,6 +19,7 @@ function onDone (err) {
   if (err) {
     console.log('\u0007')
     console.error(err)
+    throw err
   }
   console.log(`Successfully built version ${version}.`)
 }

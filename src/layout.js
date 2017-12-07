@@ -1,7 +1,7 @@
 const html = require('choo/html')
 const login = require('./pages/login.page')
 const navbar = require('./elements/navbar.el')
-const Notifications = require('./components/Notifications')
+const Notifications = require('./components/notifications')
 const player = require('./elements/player.el')
 const UploadModal = require('./components/upload-modal.component')
 
