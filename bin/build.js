@@ -3,8 +3,11 @@ var copyAssets = require('./cp-assets')
 var buildCSS = require('./build-css')
 var buildJS = require('./build-js')
 var parallel = require('run-parallel')
+var mkdirp = require('mkdirp')
 
 var { version } = require('../package.json')
+
+mkdirp.sync(path.join(__dirname, '../dist'))
 
 parallel([
   done => copyAssets(done),
