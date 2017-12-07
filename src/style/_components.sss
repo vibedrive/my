@@ -72,6 +72,7 @@
   .cover
     position: relative 
     .play-button
+      @extend .scale
       opacity: 0
       left: 0.75rem
   &:hover
@@ -86,12 +87,6 @@
 #upload-modal-container
   &.is-hidden
     opacity: 0
-  &.will-close
-    opacity: 1
-    animation: fadeout 0.2s 1 ease forwards
-  &.is-hidden.will-open
-    opacity: 0
-    animation: fadein 0.2s 1 ease forwards
 
 #account-dropdown
   .menu .menu-item:hover

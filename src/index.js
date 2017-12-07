@@ -15,6 +15,7 @@ const app = choo()
 
 app.use(require('./stores/auth.store'))
 app.use(require('./stores/file.store'))
+app.use(require('./stores/player.store'))
 app.use(require('./stores/track.store'))
 app.use(require('./stores/ui.store'))
 

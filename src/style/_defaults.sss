@@ -44,16 +44,8 @@ hr
 button 
   border: none
   border-radius: 1px
-  cursor: pointer
 
-  &:not(:active):focus
-    outline: 2px solid $purple
-
-  &:active
-    outline: none !important
-    transform: translate3d(0, 2px, 0)
-
-  &:hover
+  &:active, &:focus
     outline: none !important
 
   &.is-loading

@@ -1,7 +1,6 @@
 const sleep = require('../lib/sleep')
 const initialState = {
   accountDropdown: false,
-  uploadModal: false,
   navigating: false,
   sidepanel: false
 }
@@ -13,7 +12,6 @@ module.exports = function (globalState, emitter) {
 
   emitter.on('DOMContentLoaded', function () {
     emitter.on('ui:toggle-account-dropdown', toggleAccountDropdown)
-    emitter.on('ui:toggle-upload-modal', toggleUploadModal)
     emitter.on('ui:open-sidepanel', openSidepanel)
     emitter.on('ui:close-sidepanel', closeSidepanel)
     emitter.on('auth:logout', reset)
@@ -38,11 +36,6 @@ module.exports = function (globalState, emitter) {
 
   function toggleAccountDropdown () {
     state.accountDropdown = !state.accountDropdown
-    emitter.emit('render')
-  }
-
-  function toggleUploadModal () {
-    state.uploadModal = !state.uploadModal 
     emitter.emit('render')
   }
 

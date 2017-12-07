@@ -106,6 +106,7 @@ function trEl (row, i) {
 
     function onSecondClick () {
       self.emit('ui:open-sidepanel')  
+      self.emit('player:load-selected')
     }
   }
 }
@@ -139,9 +140,10 @@ function getCellEl (columnType, value) {
 }
 
 function coverEl (url) {
+  var self = this
   return html`
     <div class="cover w-100 h-100 flex items-center justify-start pl1">
-      <a class="absolute play-button pointer" onclick=${play}>
+      <a class="absolute play-button" onclick=${play}>
         <svg class="ic-white" style="width:1rem; height: 1rem;">
           <use xlink:href="icons/openiconic.svg#si-open-play-circle" />
         </svg>

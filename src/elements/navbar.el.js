@@ -1,5 +1,6 @@
 const html = require('choo/html')
 const accountDropdown = require('./account-dropdown.el')
+const UploadModal = require('../components/upload-modal.component')
 var sleep = require('../lib/sleep')
 
 module.exports = function navbar (state, emit) {
@@ -16,7 +17,7 @@ module.exports = function navbar (state, emit) {
 
       <div class="flex1 flex justify-end items-center pr3 pv2 f6">
 
-        <a class="mh2 pointer" onclick=${openUploadModal}>
+        <a class="mh2 pointer" onclick=${UploadModal.open}>
           <svg class="ic-white w1 h1 mr2" title="Upload">
             <use xlink:href="icons/openiconic.svg#si-open-cloud-upload" />
           </svg>
@@ -33,16 +34,4 @@ module.exports = function navbar (state, emit) {
       ${accountDropdown(state, emit)}
       
     </nav>`
-
-  async function openUploadModal (e) {
-    var el = document.querySelector('#upload-modal-container')
-
-
-    el.classList.add('will-open')
-
-    console.log(el)
-    await sleep(200)
-
-    emit('ui:toggle-upload-modal')
-  }
 }

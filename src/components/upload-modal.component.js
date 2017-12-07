@@ -1,24 +1,80 @@
-const html = require('choo/html')
+var html = require('choo/html')
+var animation = require('nanoanimation')
+var nanostate = require('nanostate')
 var sleep = require('../lib/sleep')
 var Component = require('nanocomponent')
+
+const IN_OUT_TIMING = { duration: 200 }
 
 class UploadModal extends Component {
   constructor () {
     super()
-    this.closeModal = this.closeModal.bind(this)
+
+    this.open = this.open.bind(this)
+    this.close = this.close.bind(this)
+
+    this.visibility = nanostate('initial', {
+      initial: { show: 'showing' },
+      showing: { finishShow: 'visible' },
+      visible: { hide: 'hiding'},
+      hiding: { finishHide: 'hidden' },
+      hidden: { show: 'showing' }
+    })
+
+    this.visibility.on('show', () => {
+      // showing
+
+      var keyFrames = [{ opacity: 0 }, { opacity: 1 }]
+      var animate = animation(keyFrames, IN_OUT_TIMING)
+
+      // start animating
+      var showing = animate(this.el, () => {
+        console.log('done')
+        // signal the end of the animation
+        this.visibility.emit('finishShow')
+        // update classes
+        this.rerender()
+      })
+
+    })
+
+    this.visibility.on('hide', () => {
+      // hiding
+
+      var keyFrames = [{ opacity: 1 }, { opacity: 0 }]
+      var animate = animation(keyFrames, IN_OUT_TIMING)
+
+      // start animating
+      var hiding = animate(this.el, () => { 
+        console.log('done')
+        // signal the end of the animation
+        this.visibility.emit('finishHide')
+        // update classes
+        this.rerender()
+      })
+    })
   }
 
   createElement (state, emit) {
     this.emit = emit
-    this.visible = state.ui.uploadModal
     this.items = state.files.uploading
+
     var doneLabel = this.items.every(i => i.progress === 100) ? 'Done' : 'Hide'
-    var c = !this.visible ? 'is-hidden pe-none' : ''
+
+    var c = ['hidden', 'initial'].includes(this.visibility.state) ? 'hidden' : ''
+
+    var s = ''
+
+    // if (this.visibility.state === 'hiding') s = 'visibility: visible; opacity: 1'
+    // if (this.visibility.state === 'showing') s = 'visibility: hidden; opacity: 0'
 
     this.el = html`
-      <div id="upload-modal-container" class="${c} flex z-999 fixed w-100 h-100 justify-center items-center ">
+      <div 
+        id="upload-modal-container" 
+        class="flex z-999 fixed w-100 h-100 justify-center items-center ${c}"
+        style=${s}>
 
-        <div class="w-100 h-100 fixed bg-black-80" onclick=${this.closeModal}></div>
+        <div class="w-100 h-100 fixed bg-black-80" onclick=${this.close}></div>
 
         <div id="upload-modal" class="fixed bg-black d-b br1">
           <div class="pv4 ph4 f3 fw5">Upload to Vibedrive</div>
@@ -40,7 +96,7 @@ class UploadModal extends Component {
                 <span class="">Add more files</span>
               </label>
               <a class="ph4 pv2 ba b--white bg-none white black-70 dim pointer"
-                onclick=${this.closeModal}>
+                onclick=${this.close}>
                 ${doneLabel}
               </a>
             </div>
@@ -53,17 +109,24 @@ class UploadModal extends Component {
 
   update (state, emit) {
     this.emit = emit
-    return state.ui.uploadModal !== this.visible || state.files.uploading !== this.items
+
+    if (state.files.uploading !== this.items) {
+      return true
+    }
+
+    return  false
   }
 
-  async closeModal () {
-    var el = document.querySelector('#upload-modal-container')
+  async open () {
+    this.rerender()
+    await sleep(500)
+    this.visibility.emit('show')
+  }
 
-    el.classList.add('will-close')
-
-    await sleep(200)
-
-    this.emit('ui:toggle-upload-modal')
+  async close () {
+    this.rerender()
+    await sleep(500)
+    this.visibility.emit('hide')
   }
 
 }
@@ -98,6 +161,7 @@ function mp3Icon (done) {
       <div class="white f7 ${done ? 'gray' : ''}">MP3</div>
     </div>`
 }
+
 
 module.exports = new UploadModal()
 
