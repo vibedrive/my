@@ -9,7 +9,6 @@ var utils = require('postcss-utilities')
 var plugins = [ nested, precss, utils, autoprefixer ]
 
 module.exports = function (done) {
-
   fs.readFile('src/style.sss', (err, css) => {
     postcss(plugins)
         .process(css, { parser: sugarss, from: 'src/style.sss', to: 'dist/style.css' })
@@ -17,11 +16,7 @@ module.exports = function (done) {
             fs.writeFileSync('dist/style.css', result.css)
             if ( result.map ) fs.writeFileSync('dist/style.css.map', result.map)
             done()
-            console.log('done!')
         })
-        .catch(err => {
-          done(err)
-        })
+        .catch(done)
   })
-
 }

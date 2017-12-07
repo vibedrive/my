@@ -4,7 +4,7 @@ var path = require('path')
 var budo = require('budo')
 var mkdirp = require('mkdirp')
 var cp = require('node-cp')
-var compileCSS = require('./compile-css')
+var compileCSS = require('./build-css')
 
 mkdirp(path.join(__dirname, '../dist'))
 
