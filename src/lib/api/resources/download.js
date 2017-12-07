@@ -1,4 +1,4 @@
-var request = require('request-promise-native')
+var http = require('../../http')
 
 var VibedriveResource = require('../vibedrive-resource')
 
@@ -13,11 +13,11 @@ Download.prototype.getDownloadAuthorization = async function (multihash) {
   var opts = {
     method: 'get',
     url: `${API_URL}/download/${multihash}/authorize`,
-    headers,
+    headers: this.headers,
     json: true
   }
 
-  var response = await request(opts)
+  var response = await http.get(opts)
 
   return response.Authorization
 }
@@ -26,12 +26,12 @@ Download.prototype.streamAudio = function (multihash, storageAuthorization, rang
   var opts = {
     method: 'get',
     url: `${API_URL}/download/${multihash}`,
-    headers: Object.assign(headers, { storageAuthorization })
+    headers: Object.assign(this.headers, { storageAuthorization })
   }
 
   if (range) opts.headers.range = range
 
-  return request(opts)
+  return http.get(opts)
 }
 
 module.exports = Download

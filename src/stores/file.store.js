@@ -1,7 +1,7 @@
 var concat = require('concat-stream')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
-var { uploadSmallFile, uploadLargeFile } = require('../lib/upload')
+var { uploadSmallFile, uploadLargeFile } = require('../lib/api').upload
 var multihash = require('../lib/multihash')
 var Notifications = require('../components/notifications')
 

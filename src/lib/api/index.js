@@ -3,11 +3,12 @@ var resources = {
   upload: require('./upload')
 }
 
-function VibedriveAPI (token) {
+function VibedriveAPI (token, apiURL) {
   if (!(this instanceof VibedriveAPI)) return new VibedriveAPI(token)
   if (!token) throw new Error('missing token')
 
   this.headers = { 'Authorization': token }
+  this.apiURL = apiURL || 'https://localhost:5823'
 
   this._prepResources()
 }

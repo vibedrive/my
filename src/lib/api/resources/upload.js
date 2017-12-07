@@ -1,8 +1,6 @@
-var http = require('./http')
-const sha1 = require('./sha1')
-const getHeaders = () => ({ 'Authorization': localStorage.getItem(TOKEN_KEY) })
-const API_URL = process.env.API_URL || 'https://localhost:5823'
-const TOKEN_KEY = 'vibedrive::access_token'
+var http = require('../http')
+const sha1 = require('../sha1')
+
 const FIVE_MB = 5 * 1000 * 1000
 const PART_SIZE = FIVE_MB
 
@@ -17,7 +15,7 @@ Upload.prototype = Object.create(VibedriveResource.prototype)
 
 Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
   try {
-    var { uploadUrl, authorizationToken } = await getUploadUrl(file.size)
+    var { uploadUrl, authorizationToken } = await getUploadUrl.call(this, file.size)
     var opts = {
       filename: file.fileName,
       data: file.data,
@@ -26,9 +24,9 @@ Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
       authorizationToken
     }
 
-    var { fileId } = await uploadFile(opts, onUploadProgress)
+    var { fileId } = await uploadFile.call(this, opts, onUploadProgress)
 
-    await finishSmallFile(fileId, file.hash, file.fileName, file.size)
+    await finishSmallFile.call(this, fileId, file.hash, file.fileName, file.size)
 
     return Object.assign(file, { fileId })
 
@@ -38,7 +36,7 @@ Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
 }
 
 Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) { 
-  var { fileId } = await startLargeFile(file.fileName, file.hash, file.size)
+  var { fileId } = await startLargeFile.call(this, file.fileName, file.hash, file.size)
   var parts = splitFile(file.data)
   var partSha1Array = []
 
@@ -46,7 +44,7 @@ Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) {
 
   for (let part of parts) {
     try {
-      var { uploadUrl, authorizationToken } = await getUploadPartUrl(fileId)
+      var { uploadUrl, authorizationToken } = await getUploadPartUrl.call(this, fileId)
 
       part = {
         data: part,
@@ -57,7 +55,7 @@ Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) {
         authorizationToken,
       }
 
-      await uploadPart(part, onUploadProgress)
+      await uploadPart.call(this, part, onUploadProgress)
 
       partSha1Array.push(part.partSha1)
 
@@ -68,7 +66,7 @@ Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) {
     }
   }
 
-  await finishLargeFile(fileId, file.hash, file.fileName, partSha1Array)
+  await finishLargeFile.call(this, fileId, file.hash, file.fileName, partSha1Array)
 
   return Object.assign(file, { fileId })
 }
@@ -78,25 +76,11 @@ module.exports = Upload
 
 // --- PRIVATE ---
 
-//  <-- temporary solution until b2 has cors support 
-
-async function proxyCall (b2URL, b2Headers, body) {
-  b2Headers = JSON.stringify(b2Headers)
-  var opts = {
-    url: API_URL + '/upload/proxy',
-    headers: Object.assign(getHeaders(), { b2URL, b2Headers }),
-    body
-  }
-  return http.post(opts).then(res => JSON.parse(res.body))
-}
-
-//     ... temporary solution until b2 has cors support -->
-
 // <--- Upload small files 
 
 function getUploadUrl (size) {
-  var url = API_URL + '/upload/fileURL' + '?size=' + size
-  return http.get({ url, headers: getHeaders(), json: true })
+  var url = this.apiURL + '/upload/fileURL' + '?size=' + size
+  return http.get({ url, headers: this.headers, json: true })
 }
 
 function uploadFile (opts, onUploadProgress) {
@@ -117,15 +101,15 @@ function uploadFile (opts, onUploadProgress) {
 
   // b2 does not have cors support for now.
   // proxy the call
-  return proxyCall(uploadUrl, opts.headers, opts.body)
+  return proxyCall.call(this, uploadUrl, opts.headers, opts.body)
 
   // return http.post(opts)
 }
 
 function finishSmallFile (fileId, multihash, filename, size) {
   return http.post({
-    url: API_URL + '/upload/file/' + fileId,
-    headers: getHeaders(),
+    url: this.apiURL + '/upload/file/' + fileId,
+    headers: this.headers,
     body: {
       multihash, filename, size
     },
@@ -151,11 +135,11 @@ function splitFile (fileData) {
 }
 
 function startLargeFile (fileName, multihash, size) {
-  var url = API_URL + '/upload/large'
+  var url = this.apiURL + '/upload/large'
 
   return http.post({ 
     url, 
-    headers: getHeaders(), 
+    headers: this.headers, 
     body: {
       fileName,
       multihash, 
@@ -166,7 +150,7 @@ function startLargeFile (fileName, multihash, size) {
 }
 
 function getUploadPartUrl (fileId) {
-  var url = API_URL + '/upload/partURL/' + fileId
+  var url = this.apiURL + '/upload/partURL/' + fileId
 
   return http.get({ url, headers: getHeaders(), json: true })
 }
@@ -186,18 +170,33 @@ function uploadPart (part, onUploadProgress) {
 
   // b2 does not have cors support for now.
   // proxy the call
-  return proxyCall(part.uploadUrl, opts.headers, opts.body)
+  return proxyCall.call(this, part.uploadUrl, opts.headers, opts.body)
 
   // return http.post(opts)
 }
 
 function finishLargeFile (fileId, multihash, fileName, partSha1Array) {
   return http.post({
-    url: API_URL + '/upload/large/' + fileId,
-    headers: getHeaders(),
+    url: this.apiURL + '/upload/large/' + fileId,
+    headers: this.headers,
     body: { multihash, fileName, partSha1Array },
     json: true
   })
 }
 
 //        ...upload LARGE files ---> 
+
+
+//  <-- temporary solution until b2 has cors support 
+
+async function proxyCall (b2URL, b2Headers, body) {
+  b2Headers = JSON.stringify(b2Headers)
+  var opts = {
+    url: this.apiURL + '/upload/proxy',
+    headers: Object.assign(this.headers, { b2URL, b2Headers }),
+    body
+  }
+  return http.post(opts).then(res => JSON.parse(res.body))
+}
+
+//     ... temporary solution until b2 has cors support -->
