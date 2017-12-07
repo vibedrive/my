@@ -1,5 +1,5 @@
 var html = require('choo/html')
-var Component = require('Nanocomponent')
+var Component = require('nanocomponent')
 var AudioPlayer = require('../lib/player')
 var AudioContext = window.AudioContext || window.webkitAudioContext
 
