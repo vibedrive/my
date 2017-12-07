@@ -2,7 +2,7 @@ const http = require('../lib/http')
 const sleep = require('../lib/sleep')
 const Notifications = require('../components/notifications')
 
-const LOCAL_URL = 'https://localhost:5823'
+const LOCAL_URL = process.env.API_URL || 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
 const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
 const USAGE_URL = LOCAL_URL + '/account/usage'
