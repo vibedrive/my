@@ -1,7 +1,7 @@
 var http = require('./http')
 const sha1 = require('./sha1')
 const getHeaders = () => ({ 'Authorization': localStorage.getItem(TOKEN_KEY) })
-const API_URL = 'https://localhost:5823'
+const API_URL = process.env.API_URL || 'https://localhost:5823'
 const TOKEN_KEY = 'vibedrive::access_token'
 const FIVE_MB = 5 * 1000 * 1000
 const PART_SIZE = FIVE_MB
