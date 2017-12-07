@@ -1,6 +1,6 @@
 const PouchDB = require('pouchdb')
 const DB_PREFIX = 'vibedrive::'
-const REMOTE_URL = (process.env.API_URL || 'localhost:5823') + '/userdb'  
+const REMOTE_URL = (process.env.API_URL || 'https://localhost:5823') + '/userdb'  
 
 var pouch, remote
 
@@ -39,7 +39,7 @@ module.exports = function (state, emitter) {
     }
 
     pouch = new PouchDB(localDBName)
-    remote = new PouchDB(`https://${REMOTE_URL}/userdb-${hexEncode(email)}`, remoteOpts)
+    remote = new PouchDB(`${REMOTE_URL}/userdb-${hexEncode(email)}`, remoteOpts)
     pouch.sync(remote, { live: true, retry: true })
       .on('change', onChange)
       .on('paused', onPause)
