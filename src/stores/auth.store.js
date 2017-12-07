@@ -1,13 +1,14 @@
 const http = require('../lib/http')
 const sleep = require('../lib/sleep')
 const Notifications = require('../components/notifications')
+var vibedrive = require('../lib/api')
 
 const LOCAL_URL = process.env.API_URL || 'https://localhost:5823'
 const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
 const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
+
 const USAGE_URL = LOCAL_URL + '/account/usage'
-const SESSION_URL = LOCAL_URL + '/session'
-const CURRENT_USER_URL = LOCAL_URL + '/user'
+
 const LOGIN_URL = LOCAL_URL + '/login'
 const LOGOUT_URL = LOCAL_URL + '/logout'
 
@@ -27,16 +28,25 @@ module.exports = function (state, emitter) {
   state.user = null
 
   emitter.on('DOMContentLoaded', () => {
-    getSession()
+    vibedrive.session.get()
+      .then(initialize)
+      .then(finishInitializing)
+      .catch(finishInitializing)
+
     emitter.on('login', login)
     emitter.on('auth:logout', logout)
     emitter.on('auth:input-email', inputEmail)
     emitter.on('auth:input-password', inputPassword)
   })
 
+  function finishInitializing () {
+    state.initializing = false
+    emitter.emit('render')
+  }
+
   async function initialize () {
-    state.user = await getUser() 
-    state.user.usage = await getUsage()
+    state.user = await vibedrive.user.get() 
+    state.user.usage = await vibedrive.usage.get()
     var payload = { email: state.user.email, accessToken: state.tokens.accessToken }
     emitter.emit('track:init-store', payload)
   }
@@ -69,7 +79,7 @@ module.exports = function (state, emitter) {
     try {
       var { refreshToken, accessToken } = await http.post(opts)
 
-      saveSession(refreshToken, accessToken)
+      vibedrive.session.save(refreshToken, accessToken)
 
       await initialize(email, password)
 
@@ -110,13 +120,6 @@ module.exports = function (state, emitter) {
     }
   }
 
-  function saveSession (refreshToken, accessToken) {
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken)
-    localStorage.setItem(ACCESS_TOKEN_KEY, accessToken)
-    state.tokens.refreshToken = refreshToken
-    state.tokens.accessToken = accessToken
-  }
-
   async function getUser () {
     const opts = {
       url: CURRENT_USER_URL,
@@ -153,43 +156,10 @@ module.exports = function (state, emitter) {
 
     await promise
 
-    clearSession()
+    vibedrive.session.clear()
+    state.user = null
 
     emitter.emit('render')
-  }
-
-  function clearSession () {
-    localStorage.setItem(ACCESS_TOKEN_KEY, '')
-    localStorage.setItem(REFRESH_TOKEN_KEY, '')
-    state.user = null
-    state.tokens = {}
-  }
-
-  async function getSession () {
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
-
-    if (!refreshToken) {
-      state.initializing = false
-      emitter.emit('render')
-      return
-    }
-
-    const opts = {
-      url: SESSION_URL,
-      body: { refreshToken },
-      json: true
-    }
-
-    try {
-      var { accessToken } = await http.post(opts)
-      saveSession(refreshToken, accessToken)
-      await initialize()
-      state.initializing = false
-      emitter.emit('render')
-    } catch (err) {
-      state.initializing = false
-      emitter.emit('render')
-    }
   }
 }
 

@@ -1,19 +1,21 @@
 var resources = {
-  download: require('./download'),
-  upload: require('./upload')
+  download: require('./resources/download'),
+  upload: require('./resources/upload'),
+  session: require('./resources/session'),
+  usage: require('./resources/usage'),
+  user: require('./resources/user')
 }
 
-function VibedriveAPI (token, apiURL) {
-  if (!(this instanceof VibedriveAPI)) return new VibedriveAPI(token)
-  if (!token) throw new Error('missing token')
+function VibedriveAPI () {
+  if (!(this instanceof VibedriveAPI)) return new VibedriveAPI()
 
-  this.headers = { 'Authorization': token }
-  this.apiURL = apiURL || 'https://localhost:5823'
+  this.headers = { 'Authorization': '' }
+  this.apiURL = process.env.API_URL || 'https://localhost:5823'
 
   this._prepResources()
 }
 
-VibedriveAPI.prototype._prepResources () {
+VibedriveAPI.prototype._prepResources = function () {
   for (var key in resources) {
     if (resources.hasOwnProperty(key)) {
       var resource = resources[key]
@@ -22,4 +24,4 @@ VibedriveAPI.prototype._prepResources () {
   }
 }
 
-module.exports = VibedriveAPI
+module.exports = VibedriveAPI()
