@@ -1,9 +1,9 @@
 var html = require('choo/html')
 var Table = require('../components/table.component')
 var toolbar = require('../elements/toolbar.el')
-const sidepanel = require('../elements/sidepanel.el')
+var sidepanel = require('../elements/sidepanel.el')
 
-const cols = [
+var cols = [
   { name: '', key: 'cover.id', type: 'cover', width: 4 },
   { name: 'Title', key: 'metadata.title', type: 'str' },
   { name: 'Artist', key: 'metadata.artist', type: 'str' },

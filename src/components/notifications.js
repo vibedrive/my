@@ -1,6 +1,6 @@
-const html = require('choo/html')
-const Nanocomponent = require('nanocomponent')
-const sleep = require('../lib/sleep')
+var html = require('choo/html')
+var Nanocomponent = require('nanocomponent')
+var sleep = require('../lib/sleep')
 
 function Notifications () {
   if (!(this instanceof Notifications)) return new Notifications()

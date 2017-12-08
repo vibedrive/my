@@ -1,6 +1,6 @@
-const html = require('choo/html')
+var html = require('choo/html')
 
-const tabs = [
+var tabs = [
   { name: 'Tracks', route: '/tracks' },
   { name: 'Artists', route: '/artists' },
   { name: 'Labels', route: '/labels' },

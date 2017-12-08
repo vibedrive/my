@@ -1,5 +1,5 @@
-const sleep = require('../lib/sleep')
-const initialState = {
+var sleep = require('../lib/sleep')
+var initialState = {
   accountDropdown: false,
   navigating: false,
   sidepanel: false

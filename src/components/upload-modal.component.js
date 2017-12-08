@@ -132,7 +132,7 @@ class UploadModal extends Component {
 }
 
 function uploadItem (file) {
-  const done = file.progress === 100
+  var done = file.progress === 100
   return html`
     <div class="bw1 bb b--gray pa3 dim">
       <div class="flex h-100">

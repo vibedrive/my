@@ -1,6 +1,6 @@
-const html = require('choo/html')
-const accountDropdown = require('./account-dropdown.el')
-const UploadModal = require('../components/upload-modal.component')
+var html = require('choo/html')
+var accountDropdown = require('./account-dropdown.el')
+var UploadModal = require('../components/upload-modal.component')
 var sleep = require('../lib/sleep')
 
 module.exports = function navbar (state, emit) {

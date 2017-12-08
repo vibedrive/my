@@ -1,6 +1,6 @@
-const PouchDB = require('pouchdb')
-const DB_PREFIX = 'vibedrive::'
-const REMOTE_URL = (process.env.API_URL || 'https://localhost:5823') + '/userdb'  
+var PouchDB = require('pouchdb')
+var DB_PREFIX = 'vibedrive::'
+var REMOTE_URL = (process.env.API_URL || 'https://localhost:5823') + '/userdb'  
 
 var pouch, remote
 

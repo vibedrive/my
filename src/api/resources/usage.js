@@ -9,7 +9,7 @@ function Usage (vibedrive) {
 Usage.prototype = Object.create(VibedriveResource.prototype)
 
 Usage.prototype.get = function () {
-  const opts = {
+  var opts = {
     url: this._vibedrive.apiURL + '/account/usage',
     headers: this._vibedrive.headers,
     body: { refreshToken },

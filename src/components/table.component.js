@@ -2,7 +2,7 @@ var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var sleep = require('../lib/sleep')
 
-const DEFAULT_CELL_WIDTH = 15
+const { CELL_WIDTH_IN_REM } = require('../constants')
 
 function Table (cols) {
   if (!(this instanceof Table)) return new Table(cols)
@@ -46,7 +46,7 @@ Table.prototype.update = function (state, emit) {
 
 function thEl (col) {
   return html`
-    <div class="th flex relative pure-white ph2 fw7" style="width: ${col.width || DEFAULT_CELL_WIDTH}rem">
+    <div class="th flex relative pure-white ph2 fw7" style="width: ${col.width || CELL_WIDTH_IN_REM}rem">
 
       <span>${col.name}</span>
 
@@ -82,7 +82,7 @@ function trEl (row, i) {
         ${i + 1}
       </div>
       ${this.cols.map(col => html`
-        <div class="flex f6 items-center ph2" style="width: ${col.width || DEFAULT_CELL_WIDTH}rem">
+        <div class="flex f6 items-center ph2" style="width: ${col.width || CELL_WIDTH_IN_REM}rem">
 
           ${getCellEl(col.type, fromRecursiveKey(row, col.key))}
 

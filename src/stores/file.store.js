@@ -1,14 +1,10 @@
 var concat = require('concat-stream')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
-var vibedrive = require('../lib/api')
-var { uploadSmallFile, uploadLargeFile } = vibedrive.upload
+var vibedrive = require('../api')
 var multihash = require('../lib/multihash')
 var Notifications = require('../components/notifications')
-
-const LOCAL_URL = process.env.API_URL || 'https://localhost:5823'
-const FIVE_MB = 5 * 1000 * 1000
-const PART_SIZE = FIVE_MB
+var { uploadSmallFile, uploadLargeFile } = vibedrive.upload
 
 module.exports = function (globalState, emitter) {
   var state = {

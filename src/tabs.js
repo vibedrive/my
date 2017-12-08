@@ -1,5 +1,5 @@
-const html = require('choo/html')
-const tabsbar = require('./elements/tabsbar.el')
+var html = require('choo/html')
+var tabsbar = require('./elements/tabsbar.el')
 
 module.exports = function (view) {
   return function (state, emit) {

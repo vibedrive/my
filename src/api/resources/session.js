@@ -1,5 +1,4 @@
-const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
-const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
+const { REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY } = require('../../constants')
 
 var VibedriveResource = require('../vibedrive-resource')
 var http = require('../lib/http')
@@ -12,7 +11,7 @@ function Session (vibedrive) {
 Session.prototype = Object.create(VibedriveResource.prototype)
 
 Session.prototype.get = async function () {
-  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
+  var refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY)
 
   if (!refreshToken) {
     state.initializing = false
@@ -20,7 +19,7 @@ Session.prototype.get = async function () {
     return
   }
 
-  const opts = {
+  var opts = {
     url: this._vibedrive.apiURL + '/session',
     body: { refreshToken },
     json: true

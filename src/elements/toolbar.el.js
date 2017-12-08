@@ -1,6 +1,4 @@
-const html = require('choo/html')
-
-
+var html = require('choo/html')
 
 module.exports = function toolbar (state, emit) {
   return html`

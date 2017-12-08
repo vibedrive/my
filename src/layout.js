@@ -1,9 +1,9 @@
-const html = require('choo/html')
-const login = require('./pages/login.page')
-const navbar = require('./elements/navbar.el')
-const Notifications = require('./components/notifications')
-const player = require('./elements/player.el')
-const UploadModal = require('./components/upload-modal.component')
+var html = require('choo/html')
+var login = require('./pages/login.page')
+var navbar = require('./elements/navbar.el')
+var Notifications = require('./components/notifications')
+var player = require('./elements/player.el')
+var UploadModal = require('./components/upload-modal.component')
 
 module.exports = function (view) {
   return function (state, emit) {

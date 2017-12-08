@@ -1,9 +1,9 @@
-const html = require('choo/html')
-const filled = 'bg-white'
-const empty = 'bw1 b--white bt br bb bl'
-const half = empty + ' half-waffle-square'
-const wrows = Array(10).fill(0)
-const wcols = Array(10).fill(0)
+var html = require('choo/html')
+var filled = 'bg-white'
+var empty = 'bw1 b--white bt br bb bl'
+var half = empty + ' half-waffle-square'
+var wrows = Array(10).fill(0)
+var wcols = Array(10).fill(0)
 
 module.exports = function accountPage (state, emit) {
   var used = state.user.usage.used

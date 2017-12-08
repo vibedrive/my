@@ -1,10 +1,8 @@
 var http = require('../lib/http')
-const sha1 = require('../lib/sha1')
-
-const FIVE_MB = 5 * 1000 * 1000
-const PART_SIZE = FIVE_MB
-
+var sha1 = require('../lib/sha1')
 var VibedriveResource = require('../vibedrive-resource')
+
+const { LARGE_FILE_PART_SIZE } = require('../../constants')
 
 function Upload (vibedrive) {
   if (!(this instanceof Upload)) return new Upload(vibedrive)
@@ -123,11 +121,11 @@ function finishSmallFile (fileId, multihash, filename, size) {
 
 function splitFile (fileData) {
   var parts = []
-  var n = Math.ceil( fileData.length / PART_SIZE )
+  var n = Math.ceil( fileData.length / LARGE_FILE_PART_SIZE )
 
   for (let i = 0; i < n; i++) {
-    var a = i * PART_SIZE
-    var b = a + PART_SIZE
+    var a = i * LARGE_FILE_PART_SIZE
+    var b = a + LARGE_FILE_PART_SIZE
     parts.push(fileData.slice(a, b))
   }
 

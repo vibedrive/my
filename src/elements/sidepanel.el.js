@@ -1,4 +1,4 @@
-const html = require('choo/html')
+var html = require('choo/html')
 
 module.exports = function sidepanel (state, emit) {
   var c = !state.tracks.length ? 'hidden' :
