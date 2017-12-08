@@ -1,16 +1,6 @@
-const http = require('../lib/http')
-const sleep = require('../lib/sleep')
-const Notifications = require('../components/notifications')
-var vibedrive = require('../lib/api')
-
-const LOCAL_URL = process.env.API_URL || 'https://localhost:5823'
-const ACCESS_TOKEN_KEY = 'vibedrive::access_token'
-const REFRESH_TOKEN_KEY = 'vibedrive::refresh_token'
-
-const USAGE_URL = LOCAL_URL + '/account/usage'
-
-const LOGIN_URL = LOCAL_URL + '/login'
-const LOGOUT_URL = LOCAL_URL + '/logout'
+var sleep = require('../lib/sleep')
+var Notifications = require('../components/notifications')
+var vibedrive = require('../api')
 
 module.exports = function (state, emitter) {
   state.initializing = true
@@ -47,7 +37,7 @@ module.exports = function (state, emitter) {
   async function initialize () {
     state.user = await vibedrive.user.get() 
     state.user.usage = await vibedrive.usage.get()
-    var payload = { email: state.user.email, accessToken: state.tokens.accessToken }
+    var payload = { email: state.user.email, accessToken: vibedrive.tokens.accessToken }
     emitter.emit('track:init-store', payload)
   }
 
@@ -61,25 +51,17 @@ module.exports = function (state, emitter) {
 
   async function login (e) {
     e.preventDefault()
-    
-    state.loggingIn = true
-    emitter.emit('render')
-
-    var email = e.target.form.elements.email.value
-    var password = e.target.form.elements.password.value
-
-    var opts = {
-      url: LOGIN_URL,
-      body: { email, password },
-      json: true
-    }
-
-    await sleep(300)
 
     try {
-      var { refreshToken, accessToken } = await http.post(opts)
+      state.loggingIn = true
+      emitter.emit('render')
 
-      vibedrive.session.save(refreshToken, accessToken)
+      await sleep(300)
+
+      var email = e.target.form.elements.email.value
+      var password = e.target.form.elements.password.value
+
+      var { refreshToken, accessToken } = await vibedrive.auth.login(email, password)
 
       await initialize(email, password)
 
@@ -89,74 +71,24 @@ module.exports = function (state, emitter) {
       document.body.classList.add('anim-fadeout')
 
       await sleep(500)
-
       emitter.emit(state.events.REPLACESTATE, '/tracks')
-
-    } catch (err) {
-      var errorMessage
-
-      if (typeof err === 'object' && err.statusCode) {
-        switch (err.statusCode) {
-          case 401:
-            errorMessage = 'Sorry, we don’t recognize that email or password.'
-            break
-          case 400:
-            errorMessage = 'Please enter a valid email and a password.'
-            break
-          default:
-            console.error(err)
-            errorMessage = 'There was an unexpected error.'
-            break
-        }
-      } else {
-        errorMessage = 'Could not connect to the server.'
-      }
-
-      console.log(err)
-
+    } catch (errorMessage) {
       Notifications.error(errorMessage)
       state.loggingIn = false
-      emitter.emit('render')
+      emitter.emit('render')   
     }
-  }
-
-  async function getUser () {
-    const opts = {
-      url: CURRENT_USER_URL,
-      headers: { authorization: state.tokens.accessToken },
-      json: true
-    }
-
-    return http.get(opts)
-  }
-
-  async function getUsage () {
-    const opts = {
-      url: USAGE_URL,
-      headers: { authorization: state.tokens.accessToken },
-      json: true
-    }
-
-    return http.get(opts)
   }
 
   async function logout () {
-    const opts = {
-      url: LOGOUT_URL,
-      headers: { authorization: state.tokens.accessToken },
-      body: { refreshToken: state.tokens.refreshToken },
-      json: true
-    }
-
-    var promise =  http.post(opts)
+    var promise =  vibedrive.auth.logout()
 
     document.body.classList.remove('anim-fadein')
     document.body.classList.add('anim-fadeout')
+
     await sleep(500)
 
     await promise
 
-    vibedrive.session.clear()
     state.user = null
 
     emitter.emit('render')

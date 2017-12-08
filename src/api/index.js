@@ -1,9 +1,11 @@
 var resources = {
+  auth: require('./resources/auth'),
   download: require('./resources/download'),
   upload: require('./resources/upload'),
   session: require('./resources/session'),
   usage: require('./resources/usage'),
-  user: require('./resources/user')
+  user: require('./resources/user'),
+  auth: require('./resources/auth')
 }
 
 function VibedriveAPI () {

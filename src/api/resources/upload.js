@@ -1,5 +1,5 @@
-var http = require('../../http')
-const sha1 = require('../../sha1')
+var http = require('../lib/http')
+const sha1 = require('../lib/sha1')
 
 const FIVE_MB = 5 * 1000 * 1000
 const PART_SIZE = FIVE_MB

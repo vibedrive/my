@@ -1,4 +1,4 @@
-var http = require('../../http')
+var http = require('../lib/http')
 
 var VibedriveResource = require('../vibedrive-resource')
 
