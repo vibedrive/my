@@ -17,8 +17,9 @@ function Table (cols) {
 Table.prototype = Object.create(Nanocomponent.prototype)
 
 Table.prototype.createElement = function (state, emit) {
-  const { tracks } = state
+  const { tracks, selectedTrack } = state
   
+  this.selectedRow = selectedTrack
   this.rows = tracks.map((track, i) => TableRow(this, i))
   this.emit = emit
 
@@ -39,13 +40,24 @@ Table.prototype.createElement = function (state, emit) {
 }
 
 Table.prototype.update = function (state, emit) {
-  this.emit = emit 
-  return (state.tracks !== this.tracks)
+  if (!this.emit) this.emit = emit 
+  if (!this.rows) this.rows = state.tracks.map((track, i) => TableRow(this, i))
+
+  if (state.tracks.length > this.rows.length) {
+    var difference = this.rows.length - state.tracks.length
+    state.tracks.slice(-difference).map((track, i) => TableRow(this, i)) 
+  }
+
+  if (state.tracks.length < this.rows.length) {
+    var difference = state.tracks.length - this.rows.length
+    this.rows = this.rows.slice(0, this.rows.length - difference)
+  }
+
+  return (this.selectedRow !== state.selectedTrack)
 }
 
 Table.prototype.selectRow = function (row) {
-  this.selectedRow = row
-  this.emit('render')
+  this.emit('track:select-track', row)
 }
 
 module.exports = Table

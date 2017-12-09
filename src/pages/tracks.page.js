@@ -9,7 +9,7 @@ var cols = [
   { name: 'Artist', key: 'metadata.artist', type: 'text' },
   { name: 'Label', key: 'metadata.label', type: 'text' },
   { name: 'Genre', key: 'metadata.genre', type: 'text' },
-  { name: 'Length', key: 'audio.length', type: 'text' },
+  { name: 'Length', key: 'metadata.duration', type: 'time' },
   // { name: 'Added on', key: 'metadata.addedOn', type: 'str' },
   // { name: 'BPM', key: 'metadata.bpm', type: 'int' },
   // { name: 'Key', key: 'metadata.key', type: 'str' },

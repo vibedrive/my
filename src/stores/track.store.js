@@ -103,6 +103,7 @@ async function createTrackDocument (file) {
     _id: file.hash,
     type: 'track',
     metadata: {
+      duration: metadata.duration, 
       picture: metadata.picture,
       title: metadata.title,
       label: metadata.label,
@@ -125,8 +126,6 @@ async function createTrackDocument (file) {
       name: file.fileName,
       hash: file.hash,
       size: file.size,
-
-      length: file.duration, 
 
       codec: null, 
       bitrate: null,

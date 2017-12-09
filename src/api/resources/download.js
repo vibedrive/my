@@ -9,29 +9,21 @@ function Download (vibedrive) {
 
 Download.prototype = Object.create(VibedriveResource.prototype)
 
-Download.prototype.getDownloadAuthorization = async function (multihash) {
+Download.prototype._getDownloadAuthorization = async function (multihash) {
   var opts = {
     method: 'get',
-    url: `${API_URL}/download/${multihash}/authorize`,
-    headers: this.headers,
+    url: `${this._vibedrive.apiURL}/download/${multihash}/authorize`,
+    headers: this._vibedrive.headers,
     json: true
   }
 
-  var response = await http.get(opts)
-
-  return response.Authorization
+  return http.get(opts)
 }
 
-Download.prototype.streamAudio = function (multihash, storageAuthorization, range) {
-  var opts = {
-    method: 'get',
-    url: `${API_URL}/download/${multihash}`,
-    headers: Object.assign(this.headers, { storageAuthorization })
-  }
+Download.prototype.streamURL = async function (multihash, range) {
+  var { authorizationToken, url } = await this._getDownloadAuthorization(multihash)
 
-  if (range) opts.headers.range = range
-
-  return http.get(opts)
+  return url + '?Authorization=' + authorizationToken
 }
 
 module.exports = Download

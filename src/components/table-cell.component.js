@@ -1,12 +1,15 @@
 var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var assert = require('assert')
+var player = require('../lib/audio-player')
+var { timeString } = require('../lib/audio-player/utils')
 
 const { CELL_WIDTH_IN_REM } = require('../constants')
 
 var elements = {
   text: textElement,
-  cover: coverElement
+  cover: coverElement,
+  time: timeElement
 }
 
 function TableCell (col, row) {
@@ -40,6 +43,11 @@ function textElement (value) {
     <div>${value}</div>`
 }
 
+function timeElement (value) {
+  return html`
+    <div>${timeString(value)}</div>`
+}
+
 function coverElement (state, emit) {
   var url = state ? state.coverImageURL : null
   var urlProp = url ? `src="${url}"` : ''
@@ -57,7 +65,8 @@ function coverElement (state, emit) {
   function play (e) {
     e.preventDefault()
     console.log('play!')
-    emit('player:load', this._row)
+    player.load(this._row)
+    emit('render')
   }
 }
 
