@@ -50,7 +50,8 @@ function timeElement (value) {
 
 function coverElement (state, emit) {
   var url = state ? state.coverImageURL : null
-  var urlProp = url ? `src="${url}"` : ''
+  var imgEl = html`<img ${urlProp} class="w2 h2 bg-black"/>`
+  if (url) imgEl.src = url
 
   return html`
     <div class="cover w-100 h-100 flex items-center justify-start pl1">
@@ -59,7 +60,7 @@ function coverElement (state, emit) {
           <use xlink:href="icons/openiconic.svg#si-open-play-circle" />
         </svg>
       </a>
-      <img ${urlProp} class="w2 h2 bg-black"/>
+      ${imgEl}
     </div>`
 
   function play (e) {
