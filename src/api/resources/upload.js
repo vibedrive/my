@@ -150,7 +150,7 @@ function startLargeFile (fileName, multihash, size) {
 function getUploadPartUrl (fileId) {
   var url = this._vibedrive.apiURL + '/upload/partURL/' + fileId
 
-  return http.get({ url, headers: getHeaders(), json: true })
+  return http.get({ url, headers: this._vibedrive.headers, json: true })
 }
   
 function uploadPart (part, onUploadProgress) {
