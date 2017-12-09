@@ -4,7 +4,6 @@ var mm = require('musicmetadata')
 var vibedrive = require('../api')
 var multihash = require('../lib/multihash')
 var Notifications = require('../components/notifications')
-var { uploadSmallFile, uploadLargeFile } = vibedrive.upload
 
 const { LARGE_FILE_PART_SIZE } = require('../constants')
 
@@ -38,8 +37,8 @@ module.exports = function (globalState, emitter) {
 
       var fileData = await loadFile(file)
       var uploaded = size < LARGE_FILE_PART_SIZE
-        ? await uploadSmallFile(fileData, getOnUploadProgress(i))
-        : await uploadLargeFile(fileData, getOnUploadProgress(i))
+        ? await vibedrive.upload.uploadSmallFile(fileData, getOnUploadProgress(i))
+        : await vibedrive.upload.uploadLargeFile(fileData, getOnUploadProgress(i))
 
       emitter.emit('track:create', uploaded)
       state.uploading[len - 1].progress = 100
