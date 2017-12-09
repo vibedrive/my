@@ -1,5 +1,5 @@
 var VibedriveResource = require('../vibedrive-resource')
-var http = require('../lib/http')
+var http = require('../../lib/http')
 
 function User (vibedrive) {
   if (!(this instanceof User)) return new User(vibedrive)

@@ -1,7 +1,7 @@
 const { REFRESH_TOKEN_KEY, ACCESS_TOKEN_KEY } = require('../../constants')
 
 var VibedriveResource = require('../vibedrive-resource')
-var http = require('../lib/http')
+var http = require('../../lib/http')
 
 function Session (vibedrive) {
   if (!(this instanceof Session)) return new Session(vibedrive)

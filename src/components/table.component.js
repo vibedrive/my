@@ -67,7 +67,6 @@ function thEl (col) {
     }
 
     function onMouseMove (e) {
-      console.log('move')
     }
   }
 }

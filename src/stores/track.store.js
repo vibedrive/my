@@ -1,6 +1,7 @@
 var PouchDB = require('pouchdb')
-var DB_PREFIX = 'vibedrive::'
-var REMOTE_URL = (process.env.API_URL || 'https://localhost:5823') + '/userdb'  
+
+const DB_PREFIX = 'vibedrive::'
+const REMOTE_URL = (process.env.API_URL || 'https://localhost:5823') + '/userdb'  
 
 var pouch, remote
 
@@ -27,6 +28,7 @@ module.exports = function (state, emitter) {
 
   async function initStore (payload) {
     var { email, accessToken } = payload
+
     var localDBName = DB_PREFIX + email
     var remoteOpts = {
       ajax: { 

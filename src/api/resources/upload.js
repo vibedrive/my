@@ -1,5 +1,5 @@
-var http = require('../lib/http')
-var sha1 = require('../lib/sha1')
+var http = require('../../lib/http')
+var sha1 = require('../../lib/sha1')
 var VibedriveResource = require('../vibedrive-resource')
 
 const { LARGE_FILE_PART_SIZE } = require('../../constants')

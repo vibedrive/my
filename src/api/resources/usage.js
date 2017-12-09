@@ -1,5 +1,5 @@
 var VibedriveResource = require('../vibedrive-resource')
-var http = require('../lib/http')
+var http = require('../../lib/http')
 
 function Usage (vibedrive) {
   if (!(this instanceof Usage)) return new Usage(vibedrive)
@@ -12,10 +12,8 @@ Usage.prototype.get = function () {
   var opts = {
     url: this._vibedrive.apiURL + '/account/usage',
     headers: this._vibedrive.headers,
-    body: { refreshToken },
     json: true
   }
-  console.log(opts)
 
   return http.get(opts)
 }

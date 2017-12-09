@@ -13,6 +13,10 @@ function VibedriveAPI () {
 
   this.headers = { 'Authorization': '' }
   this.apiURL = process.env.API_URL || 'https://localhost:5823'
+  this.tokens = {
+    accessToken: '',
+    sessionToken: ''
+  }
 
   this._prepResources()
 }

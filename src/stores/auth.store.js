@@ -72,8 +72,8 @@ module.exports = function (state, emitter) {
 
       await sleep(500)
       emitter.emit(state.events.REPLACESTATE, '/tracks')
-    } catch (errorMessage) {
-      Notifications.error(errorMessage)
+    } catch (err) {
+      Notifications.error(err.message)
       state.loggingIn = false
       emitter.emit('render')   
     }

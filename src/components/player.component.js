@@ -20,7 +20,6 @@ class PlayerComponent extends Component {
   }
 
   createElement (state, emit) {
-    console.log(this.track)
     if (!this.track) return html`<nav></nav>`
     var { metadata } = this.track
     return html`

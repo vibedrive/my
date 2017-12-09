@@ -1,5 +1,5 @@
 var VibedriveResource = require('../vibedrive-resource')
-var http = require('../lib/http')
+var http = require('../../lib/http')
 
 function Download (vibedrive) {
   if (!(this instanceof Download)) return new Download(vibedrive)
@@ -22,6 +22,7 @@ Download.prototype.login = async function login (email, password) {
 
     return true
   } catch (err) {
+    console.log(err)
     var errorMessage
 
     if (typeof err === 'object' && err.statusCode) {
