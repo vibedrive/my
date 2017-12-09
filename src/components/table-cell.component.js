@@ -50,7 +50,7 @@ function timeElement (value) {
 
 function coverElement (state, emit) {
   var url = state ? state.coverImageURL : null
-  var imgEl = html`<img ${urlProp} class="w2 h2 bg-black"/>`
+  var imgEl = html`<img class="w2 h2 bg-black"/>`
   if (url) imgEl.src = url
 
   return html`
