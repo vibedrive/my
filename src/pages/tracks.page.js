@@ -4,12 +4,12 @@ var toolbar = require('../elements/toolbar.el')
 var sidepanel = require('../elements/sidepanel.el')
 
 var cols = [
-  { name: '', key: 'cover.id', type: 'cover', width: 4 },
-  { name: 'Title', key: 'metadata.title', type: 'str' },
-  { name: 'Artist', key: 'metadata.artist', type: 'str' },
-  { name: 'Label', key: 'metadata.label', type: 'str' },
-  { name: 'Genre', key: 'metadata.genre', type: 'str' },
-  { name: 'Length', key: 'audio.length', type: 'int' },
+  { name: '', key: 'cover', type: 'cover', width: 4 },
+  { name: 'Title', key: 'metadata.title', type: 'text' },
+  { name: 'Artist', key: 'metadata.artist', type: 'text' },
+  { name: 'Label', key: 'metadata.label', type: 'text' },
+  { name: 'Genre', key: 'metadata.genre', type: 'text' },
+  { name: 'Length', key: 'audio.length', type: 'text' },
   // { name: 'Added on', key: 'metadata.addedOn', type: 'str' },
   // { name: 'BPM', key: 'metadata.bpm', type: 'int' },
   // { name: 'Key', key: 'metadata.key', type: 'str' },
