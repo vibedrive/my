@@ -77,7 +77,7 @@ module.exports = Upload
 // <--- Upload small files 
 
 function getUploadUrl (size) {
-  var url = this.apiURL + '/upload/fileURL' + '?size=' + size
+  var url = this._vibedrive.apiURL + '/upload/fileURL' + '?size=' + size
   return http.get({ url, headers: this.headers, json: true })
 }
 
@@ -106,7 +106,7 @@ function uploadFile (opts, onUploadProgress) {
 
 function finishSmallFile (fileId, multihash, filename, size) {
   return http.post({
-    url: this.apiURL + '/upload/file/' + fileId,
+    url: this._vibedrive.apiURL + '/upload/file/' + fileId,
     headers: this.headers,
     body: {
       multihash, filename, size
@@ -133,7 +133,7 @@ function splitFile (fileData) {
 }
 
 function startLargeFile (fileName, multihash, size) {
-  var url = this.apiURL + '/upload/large'
+  var url = this._vibedrive.apiURL + '/upload/large'
 
   return http.post({ 
     url, 
@@ -148,7 +148,7 @@ function startLargeFile (fileName, multihash, size) {
 }
 
 function getUploadPartUrl (fileId) {
-  var url = this.apiURL + '/upload/partURL/' + fileId
+  var url = this._vibedrive.apiURL + '/upload/partURL/' + fileId
 
   return http.get({ url, headers: getHeaders(), json: true })
 }
@@ -175,7 +175,7 @@ function uploadPart (part, onUploadProgress) {
 
 function finishLargeFile (fileId, multihash, fileName, partSha1Array) {
   return http.post({
-    url: this.apiURL + '/upload/large/' + fileId,
+    url: this._vibedrive.apiURL + '/upload/large/' + fileId,
     headers: this.headers,
     body: { multihash, fileName, partSha1Array },
     json: true
@@ -190,7 +190,7 @@ function finishLargeFile (fileId, multihash, fileName, partSha1Array) {
 async function proxyCall (b2URL, b2Headers, body) {
   b2Headers = JSON.stringify(b2Headers)
   var opts = {
-    url: this.apiURL + '/upload/proxy',
+    url: this._vibedrive.apiURL + '/upload/proxy',
     headers: Object.assign(this.headers, { b2URL, b2Headers }),
     body
   }
