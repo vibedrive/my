@@ -6,6 +6,8 @@ var multihash = require('../lib/multihash')
 var Notifications = require('../components/notifications')
 var { uploadSmallFile, uploadLargeFile } = vibedrive.upload
 
+const { LARGE_FILE_PART_SIZE } = require('../constants')
+
 module.exports = function (globalState, emitter) {
   var state = {
     uploading: []
@@ -35,7 +37,7 @@ module.exports = function (globalState, emitter) {
       emitter.emit('render')
 
       var fileData = await loadFile(file)
-      var uploaded = size < PART_SIZE
+      var uploaded = size < LARGE_FILE_PART_SIZE
         ? await uploadSmallFile(fileData, getOnUploadProgress(i))
         : await uploadLargeFile(fileData, getOnUploadProgress(i))
 
