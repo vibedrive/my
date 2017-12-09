@@ -5,20 +5,21 @@ var TableRow = require('./table-row.component')
 
 const { CELL_WIDTH_IN_REM } = require('../constants')
 
-
 function Table (cols) {
   if (!(this instanceof Table)) return new Table(cols)
   Nanocomponent.call(this)
   this.cols = cols
+  this.rows = []
+  this.selectedRow = null
+  this.emit = null
 }
 
 Table.prototype = Object.create(Nanocomponent.prototype)
 
 Table.prototype.createElement = function (state, emit) {
-  const { tracks, selectedTrack } = state
+  const { tracks } = state
   
-  this.rows = tracks.map(track => TableRow(this.cols))
-  this.selectedTrack = selectedTrack
+  this.rows = tracks.map((track, i) => TableRow(this, i))
   this.emit = emit
 
   this.el = html`
@@ -30,7 +31,7 @@ Table.prototype.createElement = function (state, emit) {
       </div>
 
       <div class=" flex flex-auto flex-column">      
-        ${this.rows.map((row, i) => row.render(tracks[i]))}
+        ${this.rows.map((row, i) => row.render(tracks[i], emit))}
       </div>
     </div>`
 
@@ -39,7 +40,12 @@ Table.prototype.createElement = function (state, emit) {
 
 Table.prototype.update = function (state, emit) {
   this.emit = emit 
-  return (state.tracks !== this.tracks) || (state.selectedTrack !== this.selectedTrack)
+  return (state.tracks !== this.tracks)
+}
+
+Table.prototype.selectRow = function (row) {
+  this.selectedRow = row
+  this.emit('render')
 }
 
 module.exports = Table

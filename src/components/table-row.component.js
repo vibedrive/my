@@ -2,24 +2,26 @@ var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
 var TableCell = require('./table-cell.component')
 
-function TableRow (cols) {
-  if (!(this instanceof TableRow)) return new TableRow(cols)
+function TableRow (table, index) {
+  if (!(this instanceof TableRow)) return new TableRow(table, index)
   Nanocomponent.call(this)
-  this._cols = cols
+  this.table = table
+  this.index = index
 }
 
 TableRow.prototype = Object.create(Nanocomponent.prototype)
 
 TableRow.prototype.createElement = function (row, emit) {
-  var selected = this.selectedTrack && this.selectedTrack._id === row._id
+  if (!this.emit) this.emit = emit
+  var selected = this.table.selectedRow && this.table.selectedRow._id === row._id
   var classes = selected ? 'selected' : ''
 
-  this.cells = this._cols.map(col => TableCell(col, row))
+  this.cells = this.table.cols.map(col => TableCell(col, row))
 
   return html`
     <div class="${classes} flex table-row" onclick=${e => handleClick.call(this, e)}>
       <div class="flex td tc f7 pl3 pr4 pv1 tc items-center h3" style="width: 2rem;" >
-        
+        ${this.index + 1}
       </div>
       ${this.cells.map(cell => cell.render(cell.data, emit))}
     </div>`
@@ -27,8 +29,8 @@ TableRow.prototype.createElement = function (row, emit) {
   function handleClick (e) {
     var self = this
 
-    if (this.selectedTrack._id !== row._id) {
-      this.emit('track:select-track', row)
+    if (!this.table.selectedRow || this.table.selectedRow._id !== row._id) {
+      this.table.selectRow(row)
     }
 
     e.target.addEventListener('click', onSecondClick)
@@ -40,12 +42,12 @@ TableRow.prototype.createElement = function (row, emit) {
 
     function onSecondClick () {
       self.emit('ui:open-sidepanel')  
-      self.emit('player:load-selected')
     }
   }
 }
 
-TableRow.prototype.update = function (state, emit) {
+TableRow.prototype.update = function (row, emit) {
+  this.emit = emit
   return false
 }
 

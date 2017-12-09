@@ -41,10 +41,7 @@ function textElement (value) {
 }
 
 function coverElement (state, emit) {
-  if (!state) return html`<div></div>`
-  assert.ok(typeof state !== 'object', 'cover image el: state should be an object')
-  console.log(state)
-  var url = state.coverImageURL
+  var url = state ? state.coverImageURL : null
   var urlProp = url ? `src="${url}"` : ''
 
   return html`
