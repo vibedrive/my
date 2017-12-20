@@ -62,6 +62,7 @@ module.exports = function (state, emitter) {
   }
 
   function onPause (err) {
+    if (err) console.error(err)
     // replication paused (e.g. replication up to date, user went offline)
   }
 
@@ -70,6 +71,7 @@ module.exports = function (state, emitter) {
   }
 
   function onDenied (err) {
+    if (err) console.error(err)
     // a document failed to replicate (e.g. due to permissions)
   }
 
@@ -79,6 +81,7 @@ module.exports = function (state, emitter) {
   }
 
   function onError (err) {
+    if (err) console.error(err)
     // handle error
   }
 }

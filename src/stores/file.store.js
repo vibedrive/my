@@ -36,6 +36,7 @@ module.exports = function (globalState, emitter) {
       emitter.emit('render')
 
       var fileData = await loadFile(file)
+
       var uploaded = size < LARGE_FILE_PART_SIZE
         ? await vibedrive.upload.uploadSmallFile(fileData, getOnUploadProgress(i))
         : await vibedrive.upload.uploadLargeFile(fileData, getOnUploadProgress(i))
@@ -45,41 +46,4 @@ module.exports = function (globalState, emitter) {
       emitter.emit('render')
     }
   }
-
-  function getOnUploadProgress (i) {
-    return function onUploadProgress (e) {
-
-    }
-  }
 }
-
-async function loadFile (file) {
-  var metadata 
-  return new Promise((resolve, reject) => {
-    var stream = fileReaderStream(file)
-    
-    mm(stream, { duration: true, fileSize: file.size }, onDone)
-
-    stream.pipe(concat(function (contents) {
-      // contents is the contents of the entire file
-      var data = new TextDecoder("utf-8").decode(contents)
-      var loaded = {
-        data,
-        size: file.size,
-        fileName: file.name,
-        hash: multihash(data),
-        metadata,
-        progress: 0
-      }
-
-      resolve(loaded)
-    }))
-  })
-
-  function onDone (err, data) {
-    if (err) throw err
-    metadata = data
-  }
-}
-
-

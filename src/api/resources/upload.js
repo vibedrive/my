@@ -11,11 +11,17 @@ function Upload (vibedrive) {
 
 Upload.prototype = Object.create(VibedriveResource.prototype)
 
+Upload.prototype.upload = async function (audioFile, onUploadProgress) {
+  return audioFile.size < LARGE_FILE_PART_SIZE
+    ? this.uploadSmallFile(audioFile, onUploadProgress)
+    : this.uploadLargeFile(audioFile, onUploadProgress)
+}
+
 Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
   try {
     var { uploadUrl, authorizationToken } = await getUploadUrl.call(this, file.size)
     var opts = {
-      filename: file.fileName,
+      filename: file.name,
       data: file.data,
       size: file.size,
       uploadUrl,
@@ -24,7 +30,7 @@ Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
 
     var { fileId } = await uploadFile.call(this, opts, onUploadProgress)
 
-    await finishSmallFile.call(this, fileId, file.hash, file.fileName, file.size)
+    await finishSmallFile.call(this, fileId, file.hash, file.name, file.size)
 
     return Object.assign(file, { fileId })
 
@@ -34,13 +40,16 @@ Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
 }
 
 Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) { 
-  var { fileId } = await startLargeFile.call(this, file.fileName, file.hash, file.size)
+  console.log('large file')
+  var { fileId } = await startLargeFile.call(this, file.name, file.hash, file.size)
+  console.log('fileId', fileId)
   var parts = splitFile(file.data)
+  console.log('length', parts.length)
   var partSha1Array = []
 
-  let i = 1
+  for (var i = 0; i < parts.length; i++) {
+    var part = parts[i]
 
-  for (let part of parts) {
     try {
       var { uploadUrl, authorizationToken } = await getUploadPartUrl.call(this, fileId)
 
@@ -48,7 +57,7 @@ Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) {
         data: part,
         partSha1: sha1(part),
         size: file.size,
-        partNumber: i,
+        partNumber: i + 1,
         uploadUrl,
         authorizationToken,
       }
@@ -56,15 +65,12 @@ Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) {
       await uploadPart.call(this, part, onUploadProgress)
 
       partSha1Array.push(part.partSha1)
-
-      i++
-
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
-  await finishLargeFile.call(this, fileId, file.hash, file.fileName, partSha1Array)
+  await finishLargeFile.call(this, fileId, file.hash, file.name, partSha1Array)
 
   return Object.assign(file, { fileId })
 }
@@ -154,6 +160,7 @@ function getUploadPartUrl (fileId) {
 }
   
 function uploadPart (part, onUploadProgress) {
+  console.log(part, part.data.length)
   var opts = { 
     url: part.uploadUrl,
     headers: {

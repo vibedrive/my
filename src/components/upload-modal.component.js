@@ -1,78 +1,27 @@
 var html = require('choo/html')
-var animation = require('nanoanimation')
-var nanostate = require('nanostate')
-var sleep = require('../lib/sleep')
 var Component = require('nanocomponent')
-
-const IN_OUT_TIMING = { duration: 200 }
+var Uploader = require('../uploader')
+var AudioFile = require('../uploader/audio-file')
 
 class UploadModal extends Component {
   constructor () {
     super()
-
     this.open = this.open.bind(this)
     this.close = this.close.bind(this)
-
-    this.visibility = nanostate('initial', {
-      initial: { show: 'showing' },
-      showing: { finishShow: 'visible' },
-      visible: { hide: 'hiding'},
-      hiding: { finishHide: 'hidden' },
-      hidden: { show: 'showing' }
-    })
-
-    this.visibility.on('show', () => {
-      // showing
-
-      var keyFrames = [{ opacity: 0 }, { opacity: 1 }]
-      var animate = animation(keyFrames, IN_OUT_TIMING)
-
-      // start animating
-      var showing = animate(this.el, () => {
-        console.log('done')
-        // signal the end of the animation
-        this.visibility.emit('finishShow')
-        // update classes
-        this.rerender()
-      })
-
-    })
-
-    this.visibility.on('hide', () => {
-      // hiding
-
-      var keyFrames = [{ opacity: 1 }, { opacity: 0 }]
-      var animate = animation(keyFrames, IN_OUT_TIMING)
-
-      // start animating
-      var hiding = animate(this.el, () => { 
-        console.log('done')
-        // signal the end of the animation
-        this.visibility.emit('finishHide')
-        // update classes
-        this.rerender()
-      })
-    })
+    this.handleChange = this.handleChange.bind(this)
+    this.visibility = 'hidden'
   }
 
   createElement (state, emit) {
     this.emit = emit
     this.items = state.files.uploading
 
-    var doneLabel = this.items.every(i => i.progress === 100) ? 'Done' : 'Hide'
-
-    var c = ['hidden', 'initial'].includes(this.visibility.state) ? 'hidden' : ''
-
-    var s = ''
-
-    // if (this.visibility.state === 'hiding') s = 'visibility: visible; opacity: 1'
-    // if (this.visibility.state === 'showing') s = 'visibility: hidden; opacity: 0'
+    var doneLabel = this.items.every(item => item.progress === 100) ? 'Done' : 'Hide'
 
     this.el = html`
       <div 
         id="upload-modal-container" 
-        class="flex z-999 fixed w-100 h-100 justify-center items-center ${c}"
-        style=${s}>
+        class="flex z-999 fixed w-100 h-100 justify-center items-center ${this.visibility}">
 
         <div class="w-100 h-100 fixed bg-black-80" onclick=${this.close}></div>
 
@@ -82,7 +31,7 @@ class UploadModal extends Component {
           <div>
             <div class="mh4 mv4 bw1 b--white ba">
               <div class="flex flex-column overflow-y-auto" style="width: 512px; min-height: 206px; max-height: 206px;">
-                ${this.items.map(item => uploadItem(item))}
+                ${Uploader.uploads.map(fileUpload => fileUploadEl(fileUpload))}
               </div>
             </div>
 
@@ -91,7 +40,7 @@ class UploadModal extends Component {
                 class="hidden" 
                 type="file" 
                 multiple 
-                onchange=${e => emit('upload', e.target.files)}/>
+                onchange=${this.handleChange}/>
               <label for="file-input" class="ph4 pv2 bg-white black ba dim pointer">
                 <span class="">Add more files</span>
               </label>
@@ -107,32 +56,52 @@ class UploadModal extends Component {
     return this.el
   }
 
+  async handleChange (e) {
+    var { files } = e.target
+
+    for (var i = 0; i < files.length; i++) {
+      var file = files[i]
+
+      loadAudioFile(file, (err, audioFile) => {
+        if (err) {
+          this.emit('notification:error', err)
+          return console.error(err)
+        }
+
+        var { name, size, data } = audioFile
+        Uploader.upload(name, size, data)
+        this.rerender()
+      })
+    }
+  }
+
   update (state, emit) {
     this.emit = emit
 
-    if (state.files.uploading !== this.items) {
-      return true
-    }
-
-    return  false
+    return state.files.uploading !== this.items
   }
 
   async open () {
+    this.visibility = ''
     this.rerender()
-    await sleep(500)
-    this.visibility.emit('show')
   }
 
   async close () {
+    this.visibility = 'hidden'
     this.rerender()
-    await sleep(500)
-    this.visibility.emit('hide')
   }
-
 }
 
-function uploadItem (file) {
-  var done = file.progress === 100
+function loadAudioFile (file, callback) {
+  var audioFile = new AudioFile(file)
+  
+  audioFile.on('loaded', function () { callback(null, audioFile) })
+  audioFile.on('error', callback)
+  audioFile.load()
+}
+
+function fileUploadEl (fileUpload) {
+  var done = fileUpload.progress === 100
   return html`
     <div class="bw1 bb b--gray pa3 dim">
       <div class="flex h-100">
@@ -142,11 +111,11 @@ function uploadItem (file) {
         </div>
 
         <div class="${done ? 'gray' : ''} items-center ph3 flex flex-auto">
-          <span class="td">${file.fileName}</span>
+          <span class="td">${fileUpload.file.name}</span>
         </div>
 
         <div class="${done ? 'gray' : ''} justify-end items-center flex tr w3">
-          <div class="f6">${(file.size / 1000000).toFixed(1)} MB</div>
+          <div class="f6">${(fileUpload.file.size / 1000000).toFixed(1)} MB</div>
         </div>
 
       </div>
@@ -164,4 +133,3 @@ function mp3Icon (done) {
 
 
 module.exports = new UploadModal()
-

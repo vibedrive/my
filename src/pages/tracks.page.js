@@ -9,17 +9,7 @@ var cols = [
   { name: 'Artist', key: 'metadata.artist', type: 'text' },
   { name: 'Label', key: 'metadata.label', type: 'text' },
   { name: 'Genre', key: 'metadata.genre', type: 'text' },
-  { name: 'Length', key: 'metadata.duration', type: 'time' },
-  // { name: 'Added on', key: 'metadata.addedOn', type: 'str' },
-  // { name: 'BPM', key: 'metadata.bpm', type: 'int' },
-  // { name: 'Key', key: 'metadata.key', type: 'str' },
-  // { name: 'Energy', key: 'metadata.energy', type: 'star' },
-  // { name: 'Tags', key: 'metadata.tags', type: 'tags' },
-  // { name: 'Album', key: 'metadata.album', type: 'str' },
-  // { name: 'Track', key: 'metadata.track', type: 'int' },
-  // { name: 'Year', key: 'metadata.year', type: 'int' },
-  // { name: 'Comment', key: 'metadata.comment', type: 'str' },
-  // { name: 'Audio', key: 'audio.hash', type: 'str' }
+  { name: 'Length', key: 'metadata.duration', type: 'time' }
 ]
 
 var table = Table(cols)
