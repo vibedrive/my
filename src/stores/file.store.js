@@ -2,7 +2,6 @@ var concat = require('concat-stream')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
 var vibedrive = require('../api')
-var multihash = require('../lib/multihash')
 var Notifications = require('../components/notifications')
 
 const { LARGE_FILE_PART_SIZE } = require('../constants')

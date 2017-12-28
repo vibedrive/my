@@ -21,6 +21,10 @@ function VibedriveAPI () {
   this._prepResources()
 }
 
+VibedriveAPI.prototype.loggedIn = function () {
+  return this.headers['Authorization'] && this.tokens.accessToken
+}
+
 VibedriveAPI.prototype._prepResources = function () {
   for (var key in resources) {
     if (resources.hasOwnProperty(key)) {

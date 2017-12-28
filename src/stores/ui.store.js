@@ -1,4 +1,4 @@
-var sleep = require('../lib/sleep')
+var sleep = require('hypno')
 var initialState = {
   accountDropdown: false,
   navigating: false,

@@ -13,12 +13,22 @@ module.exports = function (state, emitter) {
     emitter.on('track:select-track', selectTrack)
     emitter.on('track:init-store', initStore)
     emitter.on('track:create', createTrack)
+    emitter.on('track:delete', deleteTrack)
   })
 
   function selectTrack (track) {
     state.selectedTrack = track
     emitter.emit('render')
   }
+
+  async function deleteTrack (track) {
+    console.log(track)
+    await pouch.remove(track._id, track._rev)
+    var index = state.tracks.findIndex(t => t._id === track._id)
+    state.tracks.splice(index, 1)
+    console.log(state.tracks)
+    emitter.emit('render')
+  } 
 
   async function createTrack (file) {
     var track = await createTrackDocument(file) 

@@ -1,4 +1,4 @@
-var http = require('../../lib/http')
+var http = require('request-promise-native')
 
 var VibedriveResource = require('../vibedrive-resource')
 

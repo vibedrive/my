@@ -3,6 +3,8 @@ var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
 var concat = require('concat-stream')
 var multihash = require('../lib/multihash')
+var crypto = require('crypto')
+var multihashes = require('multihashes')
 
 module.exports = AudioFile
 
@@ -44,4 +46,12 @@ AudioFile.prototype.load = function () {
     self.ready = true
     self.emit('loaded')
   }))
+}
+
+// generate self-describing hash from striped mp3, return that hash
+function getMultihash (buf) {
+  var hash = crypto.createHash('sha256').update(buf).digest()
+  var multihash = multihashes.encode(hash, 'sha2-256')
+
+  return multihashes.toB58String(multihash)
 }

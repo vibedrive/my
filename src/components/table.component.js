@@ -1,6 +1,6 @@
 var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
-var sleep = require('../lib/sleep')
+var sleep = require('hypno')
 var TableRow = require('./table-row.component')
 
 const { CELL_WIDTH_IN_REM } = require('../constants')
@@ -40,17 +40,10 @@ Table.prototype.createElement = function (state, emit) {
 }
 
 Table.prototype.update = function (state, emit) {
-  if (!this.emit) this.emit = emit 
-  if (!this.rows) this.rows = state.tracks.map((track, i) => TableRow(this, i))
-
-  if (state.tracks.length > this.rows.length) {
-    var difference = this.rows.length - state.tracks.length
-    state.tracks.slice(-difference).map((track, i) => TableRow(this, i)) 
-  }
-
-  if (state.tracks.length < this.rows.length) {
-    var difference = state.tracks.length - this.rows.length
-    this.rows = this.rows.slice(0, this.rows.length - difference)
+  if (!this.emit) { this.emit = emit }
+  if (!this.rows || state.tracks.length !== this.rows.length) { 
+    this.rows = state.tracks.map((track, i) => TableRow(this, i))
+    return true
   }
 
   return (this.selectedRow !== state.selectedTrack)

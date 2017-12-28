@@ -1,7 +1,7 @@
 var html = require('choo/html')
 var accountDropdown = require('./account-dropdown.el')
 var UploadModal = require('../components/upload-modal.component')
-var sleep = require('../lib/sleep')
+var sleep = require('hypno')
 
 module.exports = function navbar (state, emit) {
   return html`

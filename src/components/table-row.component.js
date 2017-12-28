@@ -19,13 +19,21 @@ TableRow.prototype.createElement = function (row, emit) {
   this.cells = this.table.cols.map(col => TableCell(col, row))
 
   return html`
-    <div class="${classes} flex table-row" onclick=${e => handleClick.call(this, e)}>
+    <div class="${classes} flex table-row" 
+      oncontextmenu=${e => handleRightClick.call(this, e)} 
+      onclick=${e => handleClick.call(this, e)}>
       <div class="flex td tc f7 pl3 pr4 pv1 tc items-center h3" style="width: 2rem;" >
         ${this.index + 1}
       </div>
       ${this.cells.map(cell => cell.render(cell.data, emit))}
     </div>`
 
+  function handleRightClick (e) {
+    e.preventDefault()
+    var ok = window.confirm('delete?')
+    if (ok) return emit('track:delete', row)
+  }
+ 
   function handleClick (e) {
     var self = this
 

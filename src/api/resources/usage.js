@@ -1,5 +1,5 @@
 var VibedriveResource = require('../vibedrive-resource')
-var http = require('../../lib/http')
+var http = require('request-promise-native')
 
 function Usage (vibedrive) {
   if (!(this instanceof Usage)) return new Usage(vibedrive)

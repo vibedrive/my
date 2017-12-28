@@ -1,7 +1,7 @@
 var html = require('choo/html')
 var Component = require('nanocomponent')
-var Uploader = require('../uploader')
-var AudioFile = require('../uploader/audio-file')
+var Uploader = require('../lib/uploader')
+var AudioFile = require('../lib/audio-file')
 
 class UploadModal extends Component {
   constructor () {

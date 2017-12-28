@@ -1,4 +1,4 @@
-var sleep = require('../lib/sleep')
+var sleep = require('hypno')
 var Notifications = require('../components/notifications')
 var vibedrive = require('../api')
 

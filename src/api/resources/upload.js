@@ -1,6 +1,6 @@
-var http = require('../../lib/http')
-var sha1 = require('../../lib/sha1')
+var http = require('request-promise-native')
 var VibedriveResource = require('../vibedrive-resource')
+var crypto = require('crypto')
 
 const { LARGE_FILE_PART_SIZE } = require('../../constants')
 
@@ -40,11 +40,8 @@ Upload.prototype.uploadSmallFile = async function (file, onUploadProgress) {
 }
 
 Upload.prototype.uploadLargeFile = async function (file, onUploadProgress) { 
-  console.log('large file')
   var { fileId } = await startLargeFile.call(this, file.name, file.hash, file.size)
-  console.log('fileId', fileId)
   var parts = splitFile(file.data)
-  console.log('length', parts.length)
   var partSha1Array = []
 
   for (var i = 0; i < parts.length; i++) {
@@ -89,6 +86,7 @@ function getUploadUrl (size) {
 
 function uploadFile (opts, onUploadProgress) {
   var { uploadUrl, authorizationToken, filename, data, size } = opts
+
   var opts = {
     url: uploadUrl,
     headers: {
@@ -111,14 +109,16 @@ function uploadFile (opts, onUploadProgress) {
 }
 
 function finishSmallFile (fileId, multihash, filename, size) {
-  return http.post({
+  var opts = {
     url: this._vibedrive.apiURL + '/upload/file/' + fileId,
     headers: this._vibedrive.headers,
     body: {
-      multihash, filename, size
+      multihash, fileName: filename, size
     },
     json: true
-  })
+  }
+
+  return http.post(opts)
 }
 
 //        ...upload small files ---> 
@@ -160,7 +160,6 @@ function getUploadPartUrl (fileId) {
 }
   
 function uploadPart (part, onUploadProgress) {
-  console.log(part, part.data.length)
   var opts = { 
     url: part.uploadUrl,
     headers: {
@@ -201,7 +200,16 @@ async function proxyCall (b2URL, b2Headers, body) {
     headers: Object.assign(this._vibedrive.headers, { b2URL, b2Headers }),
     body
   }
-  return http.post(opts).then(res => JSON.parse(res.body))
+  return http.post(opts)
+    .then(res => {
+      return JSON.parse(res)
+    })
 }
 
 //     ... temporary solution until b2 has cors support -->
+
+function sha1 (data) {
+  var hash = crypto.createHash('sha1')
+  hash.update(data)
+  return hash.digest('hex')
+}

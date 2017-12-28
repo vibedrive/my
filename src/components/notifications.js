@@ -1,6 +1,6 @@
 var html = require('choo/html')
 var Nanocomponent = require('nanocomponent')
-var sleep = require('../lib/sleep')
+var sleep = require('hypno')
 
 function Notifications () {
   if (!(this instanceof Notifications)) return new Notifications()
