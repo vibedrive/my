@@ -1,13 +1,22 @@
 var html = require('choo/html')
 var accountDropdown = require('./account-dropdown.el')
 var UploadModal = require('../components/upload-modal.component')
-var sleep = require('hypno')
 
 module.exports = function navbar (state, emit) {
   return html`
-    <nav id="navbar" class="fixed z-3 top-0 left-0 flex ph3 w-100 justify-between content-between bg-black">
+    <nav id="navbar" class="fixed z-3 top-0 left-0 flex ph3 w-100 justify-between content-around bg-black">
 
       <div class="flex1 flex justify-start items-center">
+
+        <button 
+          onclick=${e => emit('ui:toggle-left-panel')}
+          class="ba bw1 b--white bg-black white f6 fw6 pv1 ph2 dim">
+          Playlists
+        </button>
+
+      </div>
+      
+      <div class="flex1 flex justify-center items-center">
 
         <a href="/tracks">
           <img src="images/logo.svg" class="ma2"/>

@@ -2,7 +2,6 @@ var Nanobus = require('nanobus')
 var fileReaderStream = require('filereader-stream')
 var mm = require('musicmetadata')
 var concat = require('concat-stream')
-var multihash = require('../lib/multihash')
 var crypto = require('crypto')
 var multihashes = require('multihashes')
 
@@ -44,12 +43,13 @@ AudioFile.prototype.load = function () {
     self.hash = multihash(data)
     self.data = data
     self.ready = true
+    console.log(self)
     self.emit('loaded')
   }))
 }
 
 // generate self-describing hash from striped mp3, return that hash
-function getMultihash (buf) {
+function multihash (buf) {
   var hash = crypto.createHash('sha256').update(buf).digest()
   var multihash = multihashes.encode(hash, 'sha2-256')
 

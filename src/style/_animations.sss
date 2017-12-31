@@ -23,6 +23,22 @@
   animation: anim-fadein 0.1s 1 ease forwards
   opacity: 0
 
+.meter
+  width: 100%
+  background-color: $purple
+  height: 4px
+  background: linear-gradient(270deg, $purple, $blue)
+  background-size: 400% 50%
+  animation: movinggradient 2s ease infinite
+
+@keyframes movinggradient
+  0%
+    background-position: 0% 50%
+  50%
+    background-position: 100% 50%
+  100% 
+    background-position: 0% 50%
+
 @keyframes infadedown
   from 
     transform: translate3d(0, -200px, 0)

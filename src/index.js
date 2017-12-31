@@ -3,12 +3,8 @@ require('babel-polyfill')
 var choo = require('choo')
 
 var layout = require('./layout')
-var tabs = require('./tabs')
 
 var tracks = require('./pages/tracks.page')
-var artists = require('./pages/artists.page')
-var labels = require('./pages/labels.page')
-var tags = require('./pages/tags.page')
 var playlists = require('./pages/playlists.page')
 
 var account = require('./pages/account.page')

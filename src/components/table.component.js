@@ -18,13 +18,13 @@ Table.prototype = Object.create(Nanocomponent.prototype)
 
 Table.prototype.createElement = function (state, emit) {
   const { tracks, selectedTrack } = state
-  
+
   this.selectedRow = selectedTrack
   this.rows = tracks.map((track, i) => TableRow(this, i))
   this.emit = emit
 
   this.el = html`
-    <div id="table-container" class="flex flex-column mv3">
+    <div id="table-container" class="flex flex-column">
 
       <div class="flex us-none h3 w-100 items-end pv3">
         <div class="th pl3 pr4 " style="width: 2rem;"></div>
@@ -41,7 +41,7 @@ Table.prototype.createElement = function (state, emit) {
 
 Table.prototype.update = function (state, emit) {
   if (!this.emit) { this.emit = emit }
-  if (!this.rows || state.tracks.length !== this.rows.length) { 
+  if (!this.rows || state.tracks.length !== this.rows.length) {
     this.rows = state.tracks.map((track, i) => TableRow(this, i))
     return true
   }

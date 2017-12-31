@@ -29,7 +29,7 @@ TableCell.prototype.createElement = function (state, emit) {
       ${this.cellElement(this.data, emit)}
     </div>`
 
-  return this.el 
+  return this.el
 }
 
 TableCell.prototype.update = function (state, emit) {

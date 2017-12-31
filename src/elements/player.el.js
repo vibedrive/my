@@ -7,7 +7,7 @@ module.exports = function playerElement (state, emit) {
   var { metadata } = player.track
 
   return html`
-    <nav class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
+    <nav id="player" class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
 
       <div class="flex items-center w-30 ">
 
@@ -27,19 +27,19 @@ module.exports = function playerElement (state, emit) {
       <div class="flex-auto flex items-center h-100 us-none">
         
           <button class=" flex items-center w2 h2 mh3 bg-none scale"
-            onclick=${e => player.prev() }>
+            onclick=${e => player.prev()}>
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-step-backward" />
             </svg>
           </button>
           <button class="flex items-center w2 h2 mh3 bg-none scale"
-            onclick=${e => player.playing ? player.pause() : player.play() }>
+            onclick=${e => player.playing ? player.pause() : player.play()}>
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-${player.playing ? 'pause' : 'play'}"/>
             </svg>
           </button>
           <button class=" flex items-center w2 h2 mh3 bg-none scale"
-            onclick=${e => player.next() }>
+            onclick=${e => player.next()}>
             <svg class="ic-white w1 h1">
               <use xlink:href="icons/openiconic.svg#si-open-media-step-forward" />
             </svg>

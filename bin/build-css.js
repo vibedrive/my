@@ -5,17 +5,20 @@ var autoprefixer = require('autoprefixer')
 var sugarss = require('sugarss')
 var nested = require('postcss-nested-props')
 var utils = require('postcss-utilities')
+var colorFunction = require('postcss-color-function')
 
-var plugins = [ nested, precss, utils, autoprefixer ]
+var plugins = [ nested, precss, utils, autoprefixer, colorFunction ]
 
 module.exports = function (done) {
   fs.readFile('src/style.sss', (err, css) => {
+    if (err) return done(err)
+
     postcss(plugins)
         .process(css, { parser: sugarss, from: 'src/style.sss', to: 'dist/style.css' })
         .then(result => {
-            fs.writeFileSync('dist/style.css', result.css)
-            if ( result.map ) fs.writeFileSync('dist/style.css.map', result.map)
-            done()
+          fs.writeFileSync('dist/style.css', result.css)
+          if (result.map) fs.writeFileSync('dist/style.css.map', result.map)
+          done()
         })
         .catch(done)
   })

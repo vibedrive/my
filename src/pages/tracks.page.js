@@ -1,6 +1,7 @@
 var html = require('choo/html')
 var Table = require('../components/table.component')
 var toolbar = require('../elements/toolbar.el')
+var leftPanel = require('../elements/left-panel.el')
 var sidepanel = require('../elements/sidepanel.el')
 
 var cols = [
@@ -15,11 +16,14 @@ var cols = [
 var table = Table(cols)
 
 module.exports = function tracksPage (state, emit) {
+  var classes = state.ui.leftPanel ? 'left-panel-visible' : ''
+
   return html`
-    <div class="flex flex-column flex-auto h-100">
+    <div id="page" class="flex flex-column flex-auto h-100 ${classes}">
       ${toolbar(state, emit)}
+      ${leftPanel(state, emit)}
       ${sidepanel(state, emit)}
-      <div class="flex flex-column flex-auto ph3 w-100 h-100 bg-dark-grey">
+      <div id="main-view" class="flex flex-column flex-auto w-100 h-100 bg-dark-grey">
         ${table.render(state, emit)}
       </div>
     </div>

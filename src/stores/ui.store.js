@@ -1,5 +1,6 @@
 var sleep = require('hypno')
 var initialState = {
+  leftPanel: true,
   accountDropdown: false,
   navigating: false,
   sidepanel: false
@@ -11,12 +12,18 @@ module.exports = function (globalState, emitter) {
   globalState.ui = state
 
   emitter.on('DOMContentLoaded', function () {
+    emitter.on('ui:toggle-left-panel', toggleLeftPanel)
     emitter.on('ui:toggle-account-dropdown', toggleAccountDropdown)
     emitter.on('ui:open-sidepanel', openSidepanel)
     emitter.on('ui:close-sidepanel', closeSidepanel)
     emitter.on('auth:logout', reset)
     emitter.on('app:navigate', onNavigate)
   })
+
+  function toggleLeftPanel () {
+    state.leftPanel = !state.leftPanel
+    emitter.emit('render')
+  }
 
   async function openSidepanel () {
     var el = document.querySelector('#sidepanel')

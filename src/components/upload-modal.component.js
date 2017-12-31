@@ -31,6 +31,7 @@ class UploadModal extends Component {
           <div>
             <div class="mh4 mv4 bw1 b--white ba">
               <div class="flex flex-column overflow-y-auto" style="width: 512px; min-height: 206px; max-height: 206px;">
+                ${fileUploadEl({ progress: 25, file: { name: 'music.mp3', size: 1234567 } })}
                 ${Uploader.uploads.map(fileUpload => fileUploadEl(fileUpload))}
               </div>
             </div>
@@ -62,15 +63,19 @@ class UploadModal extends Component {
     for (var i = 0; i < files.length; i++) {
       var file = files[i]
 
-      loadAudioFile(file, (err, audioFile) => {
+      loadAudioFile(file, async (err, audioFile) => {
         if (err) {
           this.emit('notification:error', err)
           return console.error(err)
         }
 
-        var { name, size, data } = audioFile
-        Uploader.upload(name, size, data)
+        var fileUpload = Uploader.upload(audioFile)
+
         this.rerender()
+
+        var uploaded = await fileUpload.result
+
+        this.emit('track:create', uploaded)
       })
     }
   }
@@ -94,7 +99,7 @@ class UploadModal extends Component {
 
 function loadAudioFile (file, callback) {
   var audioFile = new AudioFile(file)
-  
+
   audioFile.on('loaded', function () { callback(null, audioFile) })
   audioFile.on('error', callback)
   audioFile.load()
@@ -103,25 +108,39 @@ function loadAudioFile (file, callback) {
 function fileUploadEl (fileUpload) {
   var done = fileUpload.progress === 100
   return html`
-    <div class="bw1 bb b--gray pa3 dim">
+    <div class="bw1 bb b--gray pa3">
       <div class="flex h-100">
 
         <div class="justify-center items-center">
           ${mp3Icon(done)}
         </div>
 
-        <div class="${done ? 'gray' : ''} items-center ph3 flex flex-auto">
-          <span class="td">${fileUpload.file.name}</span>
+        <div class="${done ? 'gray' : ''} h-100 ph3 flex flex-auto flex-column justify-center">
+          <div class="flex justify-between">
+            <span class="td f6">${fileUpload.file.name}</span>
+            <div class="f6">${(fileUpload.file.size / 1000000).toFixed(1)} MB</div>
+          </div>
+          <div class="flex justify-start w-100 h1 mv1">
+            <div class="meter"></div>
+          </div>
         </div>
 
-        <div class="${done ? 'gray' : ''} justify-end items-center flex tr w3">
-          <div class="f6">${(fileUpload.file.size / 1000000).toFixed(1)} MB</div>
+        <div class="${done ? 'gray' : ''} justify-end items-center flex tr">
+          <button
+            onclick=${cancel}
+            class="bg-white black w1 h1 f7 flex align-center justify-center dim pointer fw6">
+            ×
+          </button>
         </div>
 
       </div>
 
     </div>
   `
+  function cancel (e) {
+    e.preventDefault()
+    // TODO
+  }
 }
 
 function mp3Icon (done) {
@@ -130,6 +149,5 @@ function mp3Icon (done) {
       <div class="white f7 ${done ? 'gray' : ''}">MP3</div>
     </div>`
 }
-
 
 module.exports = new UploadModal()

@@ -1,16 +1,16 @@
 {
-  "name": "my.vibedrive",
-  "private": true,
+  "name": "vibedrive-web",
+  "description": "web client for vibedrive",
   "version": "1.0.0",
-  "description": "",
+  "author": "kareniel",
+  "private": true,
   "main": "index.js",
   "scripts": {
     "start": "npm run watch",
     "watch": "node ./bin/watch",
-    "build": "node ./bin/build"
+    "build": "node ./bin/build",
+    "test": "node test"
   },
-  "author": "kareniel",
-  "license": "MIT",
   "browser": {
     "request": "xhr"
   },
@@ -24,6 +24,7 @@
     "mv": "^2.1.1",
     "node-cp": "^0.1.1",
     "postcss": "^6.0.14",
+    "postcss-color-function": "^4.0.1",
     "postcss-nested-props": "^2.0.0",
     "postcss-utilities": "^0.7.0",
     "precss": "^2.0.0",
@@ -46,9 +47,7 @@
     "nanoanimation": "^2.0.1",
     "nanocomponent": "^6.4.2",
     "nanostate": "^1.0.3",
-    "pouchdb": "^6.3.4",
-    "request": "^2.83.0",
-    "request-promise-native": "^1.0.5",
+    "vibedrive-sdk": "file:../../modules/vibedrive-sdk",
     "xhr": "^2.4.0"
   }
 }

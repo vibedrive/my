@@ -1,6 +1,6 @@
 var sleep = require('hypno')
 var Notifications = require('../components/notifications')
-var vibedrive = require('../api')
+var vibedrive = require('vibedrive-sdk')
 
 module.exports = function (state, emitter) {
   state.initializing = true
@@ -38,7 +38,7 @@ module.exports = function (state, emitter) {
     state.user = await vibedrive.user.get() 
     state.user.usage = await vibedrive.usage.get()
     var payload = { email: state.user.email, accessToken: vibedrive.tokens.accessToken }
-    emitter.emit('track:init-store', payload)
+    emitter.emit('track:get-all')
   }
 
   function inputEmail (value) {

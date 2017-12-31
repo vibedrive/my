@@ -1,9 +1,10 @@
 var html = require('choo/html')
 
 module.exports = function sidepanel (state, emit) {
-  var c = !state.tracks.length ? 'hidden' :
-    (state.ui.sidepanel && state.selectedTrack) 
-      ? '' 
+  var c = !state.tracks.length
+    ? 'hidden'
+    : (state.ui.sidepanel && state.selectedTrack)
+      ? ''
       : 'is-hidden'
 
   return html`

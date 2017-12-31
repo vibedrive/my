@@ -1,6 +1,6 @@
 var Nanobus = require('nanobus')
 var Clock = require('./clock')
-var vibedrive = require('../../api')
+var vibedrive = require('vibedrive-sdk')
 
 var { timeString } = require('./utils')
 
