@@ -64,7 +64,7 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
 
   function toggleIcon (toggled) {
     return html`
-      <button class="w1 h1 mr2 bg-none" onclick=${e => this.toggleOpen()}>
+      <button class="w1 h1 mr2 bg-none scale" onclick=${e => this.toggleOpen()}>
         ${toggled
           ? html`<svg class="ic-white w1 h1" viewBox="0 0 8 8">
                   <use xlink:href="icons/openiconic.svg#si-open-chevron-bottom"></use>
