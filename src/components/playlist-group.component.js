@@ -28,6 +28,8 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
 
   return html`
     <div class="playlist-group w-100">
+
+
       ${html`
           <div tabindex="0" class="${!this.parent ? 'hidden' : ''} playlist-group-item flex flex-row ph1 pv2 w-100">
             ${paddingBlocks(this.parent)}
@@ -39,7 +41,7 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
         ${this.subgroups.map((group, i) => group.render(this._subgroups[i], emit))}
         ${this.playlists.map(p => html`
           <div tabindex=0 class="playlist-group-item playlist-item flex flex-row pa1 w-100">
-            ${paddingBlocks(this.parent, 1)}
+            ${paddingBlocks(this.parent, this.parent ? 1 : 0)}
             ${playlistIcon()}
             ${p.name}
           </div>
@@ -78,7 +80,7 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
 
   function playlistIcon () {
     return html`
-      <div class="playlist-group-icon w1 h1 mr2">
+      <div class="playlist-group-icon w1 h1 mh2">
         <svg class="ic-white w1 h1" viewBox="0 0 8 8">
           <use xlink:href="icons/openiconic.svg#si-open-excerpt"></use>
         </svg>
