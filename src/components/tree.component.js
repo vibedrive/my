@@ -1,8 +1,8 @@
 var html = require('choo/html')
 var Component = require('nanocomponent')
 
-function PlaylistGroup (parent) {
-  if (!(this instanceof PlaylistGroup)) return new PlaylistGroup(parent)
+function Tree (parent) {
+  if (!(this instanceof Tree)) return new Tree(parent)
 
   Component.call(this)
 
@@ -14,9 +14,9 @@ function PlaylistGroup (parent) {
   this.toggleOpen = this.toggleOpen.bind(this)
 }
 
-PlaylistGroup.prototype = Object.create(Component.prototype)
+Tree.prototype = Object.create(Component.prototype)
 
-PlaylistGroup.prototype.createElement = function (state, emit) {
+Tree.prototype.createElement = function (state, emit) {
   var { name, subgroups, playlists } = state
 
   this.emit = emit
@@ -24,18 +24,16 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
   this.playlists = playlists || []
 
   this._subgroups = subgroups
-  this.subgroups = subgroups.map(subgroup => PlaylistGroup(this))
+  this.subgroups = subgroups.map(subgroup => Tree(this))
 
   return html`
     <div class="playlist-group w-100">
-
-
       ${html`
-          <div tabindex="0" class="${!this.parent ? 'hidden' : ''} playlist-group-item flex flex-row ph1 pv2 w-100">
-            ${paddingBlocks(this.parent)}
-            ${toggleIcon.call(this, this.open)}
-            <div class="w-100 tl mh1">${this.name}</div>
-          </div>`
+        <div tabindex="0" class="${!this.parent ? 'hidden' : ''} playlist-group-item flex flex-row ph1 pv2 w-100">
+          ${paddingBlocks(this.parent)}
+          ${toggleIcon.call(this, this.open)}
+          <div class="w-100 tl mh1">${this.name}</div>
+        </div>`
       }
       <div class="playlist-group-children ${this.open ? '' : 'hidden'}">
         ${this.subgroups.map((group, i) => group.render(this._subgroups[i], emit))}
@@ -88,13 +86,18 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
   }
 }
 
-PlaylistGroup.prototype.update = function (state, emit) {
+Tree.prototype.update = function (state, emit) {
   return state.subgroups !== this._subgroups
 }
 
-PlaylistGroup.prototype.toggleOpen = function () {
+Tree.prototype.toggleOpen = function () {
   this.open = !this.open
   this.rerender()
 }
 
-module.exports = PlaylistGroup
+Tree.prototype.addPlaylist = function (playlist) {
+  this.playlists.push(playlist)
+  this.rerender()
+}
+
+module.exports = Tree
