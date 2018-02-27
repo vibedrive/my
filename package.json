@@ -47,7 +47,7 @@
     "nanoanimation": "^2.0.1",
     "nanocomponent": "^6.4.2",
     "nanostate": "^1.0.3",
-    "vibedrive-sdk": "file:../../modules/vibedrive-sdk",
+    "vibedrive-sdk": "file:../sdk",
     "xhr": "^2.4.0"
   }
 }

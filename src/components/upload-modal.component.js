@@ -73,9 +73,13 @@ class UploadModal extends Component {
 
         this.rerender()
 
-        var uploaded = await fileUpload.result
+        try {
+          var uploaded = await fileUpload.result
 
-        this.emit('track:create', uploaded)
+          this.emit('track:create', uploaded)
+        } catch (err) {
+          console.error(err)
+        }
       })
     }
   }

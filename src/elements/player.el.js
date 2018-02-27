@@ -7,7 +7,7 @@ module.exports = function playerElement (state, emit) {
   var { metadata } = player.track
 
   return html`
-    <nav id="player" class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
+    <nav id="player" class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-near-black ph3">
 
       <div class="flex items-center w-30 ">
 

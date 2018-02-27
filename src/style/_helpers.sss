@@ -19,6 +19,8 @@
   fill: $white
 .ic-black
   fill: $black
+.ic-blue
+  fill: $blue
 
 .pure-white
   color: $pure-white  
@@ -27,6 +29,10 @@
 
 .b--blue
   border-color: $blue
+.b--black
+  border-color: $black
+.b--pure-black
+  border-color: color($pure-black a(0.2))
 
 .hidden
   display: none
@@ -105,4 +111,18 @@
   transform: scale3d(0.9, 0.9, 1)   
   transition: 0.2s 
 
+.shadow1
+  box-shadow: 0.5rem 0.5rem color($pure-black a(0.25))
 
+.hover-b--blue
+  border: 1px solid transparent
+  &:hover
+    border-color: $blue
+.hover-b--black
+  border: 1px solid transparent
+  &:hover
+    border-color: $black
+.hover-b--pure-black
+  border: 1px solid transparent
+  &:hover
+    border-color: $pure-black

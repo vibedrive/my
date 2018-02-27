@@ -98,3 +98,25 @@
   outline: none
   background-color: $dark-blue
   color: $pure-white
+
+$dropdown-item-height: 2rem
+
+.dropdown
+  max-height: calc($dropdown-item-height * 5)
+  min-width: 8rem
+  border: 1px solid $near-black
+  background-color: $lighter-grey
+  overflow-y: scroll 
+  padding: 0
+
+.dropdown-item
+  height: $dropdown-item-height
+  display: flex
+  flex-direction: row
+  justify-content: start 
+  align-items: center
+  padding: 0.25rem 0.5rem
+  width: 100%
+  font-weight: 500
+  &:hover
+    background-color: color($light-grey a(0.25))

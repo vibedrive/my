@@ -23,7 +23,7 @@ class PlayerComponent extends Component {
     if (!this.track) return html`<nav></nav>`
     var { metadata } = this.track
     return html`
-      <nav class="z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
+      <nav class="bw1 ba b--pure-black z-1 flex items-center w-100 h3 justify-between fixed bottom-0 bg-black ph3">
 
         <div class="flex items-center w-30 ">
 

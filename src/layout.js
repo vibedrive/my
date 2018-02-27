@@ -6,12 +6,17 @@ var player = require('./elements/player.el')
 var UploadModal = require('./components/upload-modal.component')
 
 module.exports = function (view) {
+  // return function (state, emit) {
+  //   return state.initializing
+  //     ? initializing()
+  //     : state.user
+  //       ? layout(view, state, emit)
+  //       : login(state, emit)
+  // }
   return function (state, emit) {
-    return state.initializing 
+    return state.initializing
       ? initializing()
-      : state.user
-        ? layout(view, state, emit)
-        : login(state, emit)
+      : layout(view, state, emit)
   }
 }
 
@@ -22,7 +27,7 @@ function initializing () {
         <div class="spinner mh3"> </div>
         <div class="">Loading... </div>
       </div>
-    </body>` 
+    </body>`
 }
 
 function layout (view, state, emit) {

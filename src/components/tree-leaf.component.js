@@ -1,45 +1,29 @@
 var html = require('choo/html')
 var Component = require('nanocomponent')
 
-function PlaylistGroup (parent) {
-  if (!(this instanceof PlaylistGroup)) return new PlaylistGroup(parent)
+function TreeLeaf (parent) {
+  if (!(this instanceof TreeLeaf)) return new TreeLeaf(parent)
 
   Component.call(this)
-
-  this.parent = parent
-  this.open = !parent
-  this.subgroups = []
-  this._subgroups = null
-  this.playlists = []
-  this.toggleOpen = this.toggleOpen.bind(this)
 }
 
-PlaylistGroup.prototype = Object.create(Component.prototype)
+TreeLeaf.prototype = Object.create(Component.prototype)
 
-PlaylistGroup.prototype.createElement = function (state, emit) {
-  var { name, subgroups, playlists } = state
-
-  this.emit = emit
-  this.name = name
-  this.playlists = playlists || []
-
-  this._subgroups = subgroups
-  this.subgroups = subgroups.map(subgroup => PlaylistGroup(this))
-
+TreeLeaf.prototype.createElement = function (state, emit) {
   return html`
     <div class="playlist-group w-100">
       ${html`
-          <div tabindex="0" class="${!this.parent ? 'hidden' : ''} playlist-group-item flex flex-row ph1 pv2 w-100">
-            ${paddingBlocks(this.parent)}
-            ${toggleIcon.call(this, this.open)}
-            <div class="w-100 tl mh1">${this.name}</div>
-          </div>`
+        <div tabindex="0" class="${!this.parent ? 'hidden' : ''} playlist-group-item flex flex-row ph1 pv2 w-100">
+          ${paddingBlocks(this.parent)}
+          ${toggleIcon.call(this, this.open)}
+          <div class="w-100 tl mh1">${this.name}</div>
+        </div>`
       }
       <div class="playlist-group-children ${this.open ? '' : 'hidden'}">
         ${this.subgroups.map((group, i) => group.render(this._subgroups[i], emit))}
         ${this.playlists.map(p => html`
           <div tabindex=0 class="playlist-group-item playlist-item flex flex-row pa1 w-100">
-            ${paddingBlocks(this.parent, 1)}
+            ${paddingBlocks(this.parent, this.parent ? 1 : 0)}
             ${playlistIcon()}
             ${p.name}
           </div>
@@ -64,7 +48,7 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
 
   function toggleIcon (toggled) {
     return html`
-      <button class="w1 h1 mr2 bg-none" onclick=${e => this.toggleOpen()}>
+      <button class="w1 h1 mr2 bg-none scale" onclick=${e => this.toggle()}>
         ${toggled
           ? html`<svg class="ic-white w1 h1" viewBox="0 0 8 8">
                   <use xlink:href="icons/openiconic.svg#si-open-chevron-bottom"></use>
@@ -78,7 +62,7 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
 
   function playlistIcon () {
     return html`
-      <div class="playlist-group-icon w1 h1 mr2">
+      <div class="playlist-group-icon w1 h1 mh2">
         <svg class="ic-white w1 h1" viewBox="0 0 8 8">
           <use xlink:href="icons/openiconic.svg#si-open-excerpt"></use>
         </svg>
@@ -86,13 +70,8 @@ PlaylistGroup.prototype.createElement = function (state, emit) {
   }
 }
 
-PlaylistGroup.prototype.update = function (state, emit) {
+TreeLeaf.prototype.update = function (state, emit) {
   return state.subgroups !== this._subgroups
 }
 
-PlaylistGroup.prototype.toggleOpen = function () {
-  this.open = !this.open
-  this.rerender()
-}
-
-module.exports = PlaylistGroup
+module.exports = TreeLeaf

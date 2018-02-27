@@ -1,13 +1,13 @@
 const html = require('choo/html')
 
 module.exports = function accountDropdown (state, emit) {
-  return !state.ui.accountDropdown 
+  return !state.ui.accountDropdown
     ? html`<div class="hidden"></div>`
     : html`
         <div class="block fixed left-0 right-0 top-0 bottom-0">
 
           <div id="account-dropdown" class="absolute right-0 z-3 br1 mt5 bg-black pv3 ph3">
-            <div class="pv2 ph2 f6 fw5 gray">${state.user.email}</div>
+            <div class="pv2 ph2 f6 fw5 gray">${state.user ? state.user.email : 'Anonymous'}</div>
 
             <div class="menu mv3">
               <div class="pv2 ph2 pointer menu-item" 

@@ -4,7 +4,7 @@ var UploadModal = require('../components/upload-modal.component')
 
 module.exports = function navbar (state, emit) {
   return html`
-    <nav id="navbar" class="fixed z-3 top-0 left-0 flex ph3 w-100 justify-between content-around bg-black">
+    <nav id="navbar" class="bw1 bb b--pure-black fixed z-3 top-0 left-0 flex ph3 w-100 justify-between content-around bg-black">
 
       <div class="flex1 flex justify-start items-center">
 
@@ -33,7 +33,7 @@ module.exports = function navbar (state, emit) {
         </a>
 
         <a class="mh2 pointer" onclick=${e => emit('ui:toggle-account-dropdown')}>
-          <svg class="ic-white w1 h1"  title="${state.user.email}">
+          <svg class="ic-white w1 h1"  title="${state.user ? state.user.email : 'anonymous'}">
             <use xlink:href="icons/openiconic.svg#si-open-person" />
           </svg>
         </a>
