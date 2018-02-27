@@ -49,6 +49,6 @@ module.exports = function leftPanel (state, emit) {
       name: 'Untitled'
     }
 
-    userPlaylists.addPlaylist(playlist)
+    userPlaylistTree.addLeaf(playlist)
   }
 }

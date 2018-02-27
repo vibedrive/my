@@ -33,7 +33,7 @@ module.exports = function navbar (state, emit) {
         </a>
 
         <a class="mh2 pointer" onclick=${e => emit('ui:toggle-account-dropdown')}>
-          <svg class="ic-white w1 h1"  title="${state.user.email}">
+          <svg class="ic-white w1 h1"  title="${state.user ? state.user.email : 'anonymous'}">
             <use xlink:href="icons/openiconic.svg#si-open-person" />
           </svg>
         </a>

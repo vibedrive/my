@@ -1,36 +1,15 @@
 var html = require('choo/html')
 var Component = require('nanocomponent')
-var TreeLeaf = require('./tree-leaf.component')
 
-module.exports = Tree
-
-function Tree (parent) {
-  if (!(this instanceof Tree)) return new Tree(parent)
+function TreeLeaf (parent) {
+  if (!(this instanceof TreeLeaf)) return new TreeLeaf(parent)
 
   Component.call(this)
-
-  this.parent = parent
-  this.open = !parent
-  this.subgroups = []
-  this._subgroups = null
-  this.playlists = []
-  this.toggle = this.toggle.bind(this)
-
-  this.children = []
 }
 
-Tree.prototype = Object.create(Component.prototype)
+TreeLeaf.prototype = Object.create(Component.prototype)
 
-Tree.prototype.createElement = function (state, emit) {
-  var { name, subgroups, playlists } = state
-
-  this.emit = emit
-  this.name = name
-  this.playlists = playlists || []
-
-  this._subgroups = subgroups
-  this.subgroups = subgroups.map(subgroup => Tree(this))
-
+TreeLeaf.prototype.createElement = function (state, emit) {
   return html`
     <div class="playlist-group w-100">
       ${html`
@@ -61,6 +40,12 @@ Tree.prototype.createElement = function (state, emit) {
       </div>`
   }
 
+  function numberOfParentsRecursive (parent = {}, i = 0) {
+    return parent.parent
+      ? numberOfParentsRecursive(parent.parent, i + 1)
+      : i
+  }
+
   function toggleIcon (toggled) {
     return html`
       <button class="w1 h1 mr2 bg-none scale" onclick=${e => this.toggle()}>
@@ -85,22 +70,8 @@ Tree.prototype.createElement = function (state, emit) {
   }
 }
 
-Tree.prototype.update = function (state, emit) {
+TreeLeaf.prototype.update = function (state, emit) {
   return state.subgroups !== this._subgroups
 }
 
-Tree.prototype.toggle = function () {
-  this.open = !this.open
-  this.rerender()
-}
-
-Tree.prototype.addLeaf = function (playlist) {
-  this.playlists.push(playlist)
-  this.rerender()
-}
-
-function numberOfParentsRecursive (parent = {}, i = 0) {
-  return parent.parent
-    ? numberOfParentsRecursive(parent.parent, i + 1)
-    : i
-}
+module.exports = TreeLeaf
